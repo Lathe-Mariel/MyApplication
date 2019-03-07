@@ -1,0 +1,22 @@
+class Object3D 1008
+shape StlModel
+translate 7 -2 -8
+readshape 2 dog.stl
+shader SP_ObjectWithLight
+color 1 0.7 0 1
+scale 0.6 0.6 0.6
+classend
+class TexObject3D 1007
+shape TilePanelShapeGenerator
+makeshape 0 100 100 0 100 100
+texture seabottom repeat
+shader SP_SimpleTextureSimpleZ
+translate 0 -2 0
+classend
+class Object3D 1010
+shape StlModel
+readshape 0 tourou.stl
+shader SP_ObjectWithLight
+color 0.6 0.6 0.7 1
+translate 7 -2.5 -5
+classend

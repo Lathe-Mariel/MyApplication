@@ -1,0 +1,78 @@
+@startuml
+[-> MainActivity:-App start-
+create GLStageRenderer
+MainActivity -> GLStageRenderer:create
+create GameManager
+MainActivity -> GameManager:create
+create ScreenInput
+GameManager -> ScreenInput:create
+create GestureDetector
+ScreenInput -> GestureDetector:create
+activate ScreenInput
+activate GameManager
+GameManager -> GameManager:makeNewStage()
+activate GameManager #ccccff
+ create Field3D2
+ GameManager -> Field3D2:create
+ GameManager -> ScreenInput:setField()
+ activate Field3D2
+ create QuaterSpaceManager
+ GameManager -> QuaterSpaceManager:create
+ participant Object3D
+ create Cat
+ GameManager -> Cat:create
+ activate Cat
+deactivate GameManager
+Cat -> Cat:init()
+
+[-> GLStageRenderer:onSurfaceCreated()
+GLStageRenderer -> GameManager:callBackByRenderer()
+GameManager -> GameManager:makeNewQuestion()
+GameManager -> Field3D2:putObject()
+GameManager -> GameManager:generateStageFactors()
+create Object3D
+GameManager -> Object3D:create
+activate Object3D
+GameManager -> Field3D2:putAllObjects()
+Field3D2 -> GLStageRenderer:setAllObject()
+Field3D2 -> QuaterSpaceManager:registObject3D()
+activate QuaterSpaceManager
+GameManager -> Field3D2:sendObjectsAppearance()
+GameManager -> GLStageRenderer:setStageDataReady()
+activate GLStageRenderer
+create StageRoopTimer
+GameManager -> StageRoopTimer:create
+GameManager -> StageRoopTimer:start()
+activate StageRoopTimer
+
+==Game Loop==
+[-> ScreenInput:onTouch()
+activate GestureDetector
+ScreenInput -> GestureDetector:onTouchEvent()
+GestureDetector --> ScreenInput
+opt short tap
+ ScreenInput -> ScreenInput:getColorByScreen()
+end
+opt correct answer
+ ScreenInput -> GameManager:stageClear()
+ GameManager -> Field3D2:removeObject()
+ GameManager -> GameManager:makeNewQuestion()
+ GameManager -> Field3D2:putObject()
+end
+
+critical
+ StageRoopTimer -> QuaterSpaceManager:checkCollision()
+ loop 1, collisionCount
+  QuaterSpaceManager -> Object3D:collideVsSphere()
+ end
+ StageRoopTimer -> ScreenInput:screenInputFetch()
+ ScreenInput -> Field3D2:setInputState()
+ Field3D2 -> Cat:translate()
+end
+
+GLStageRenderer -> GLStageRenderer:onDrawFrame()
+activate GLStageRenderer #ccffcc
+GLStageRenderer -> Cat:<position data>
+Cat --> GLStageRenderer
+deactivate GLStageRenderer
+@enduml

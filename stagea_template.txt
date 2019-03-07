@@ -1,0 +1,60 @@
+class TexObject3D 1000		//画面表示用基底クラス生成([TexObject3D] or [Object3D] or [etc.])
+shape TexCube			//シェイプ生成オブジェクトをクラス名で指定(実際に生成するのはmakeshape節)
+makeshape			//シェイプオブジェクトにより３D形状の点群データ生成&基底オブジェクトに登録, 内部的には引数指令付き(該当形状クラスのcreateShepe3D()が呼ばれる) 1つ目の引数でID指定が可能、無い場合はID自動生成。２つ目以降の引数で形状指定(意味合いは各Shape Generatorにより異なる)。
+				//makeshape節の対応するメソッドは public int createShape3D(int, float, float, float, int, int);
+texture woodenbox		//基底オブジェクトへテクスチャー設定(Textureクラスのstatic要素で全ての画像IDが保持される、同じ画像を指定した場合は自動で、同録済みのOpenGLESで生成されたテクスチャIDが返され、基底オブジェクトにセットされる）
+shader SP_TextureWithLight	//基底オブジェクトへシェーダー設定.第1引数は規定の文字列であり、GLESクラスのstaticなmapに登録された、動的生成されたintへ名前解決される
+rotate 45 1 0 1			//基底オブジェクト回転指令(OpenGLESへのrotateM 指令引数として保持される)<int, float, float, float>
+translate 10 -6 0		//基底オブジェクト移動指令(OpenGLESへのtranslateM 指令引数として保持される)
+classend			//オブジェクト生成単位終了, オブジェクトを描画リストへ登録
+diplicateclass 1002		//直前で生成したクラスをコピー。diplicateclass した場合もclassendが必要. 内部的には各プロパティーがcloneされている.
+translate -10 -6 0		//クラスコピーした場合、設定するプロパティー値は元オブジェクトの値と掛け合わされず、常に原点からの数字となる
+classend			//クラスコピーした場合もclassend でクラス生成終了
+class TexObject3D 1003
+shape TexCube
+makeshape
+texture burberry
+translate 0 -1 7
+shader SP_SimpleTexture
+classend
+class Object3D 1004
+shape SphereEX
+makeshape 360 -90 90 72 36	//シェイプオブジェクトにより３D形状の点群データ生成&基底オブジェクトに登録, 内部的には引数指令付き(該当形状クラスのcreateShepe3D(args...)が呼ばれる)
+translate 50 10 0
+scale 1.5 1.5 1.5
+color 0.95 0.95 0.88 1
+shader SP_SimpleObject
+classend
+diplicateclass 1005
+scale 5 5 5
+color 0.2 0.2 1 1		//colorの指定は正規化されているので0～1
+class Object3D
+shape StlModel
+readshape			//StlModelの場合のみreadshape指令を使用する。引数無しならランダムでアルファベットを生成。引数でSTLファイル名を指令可能
+shader SP_ObjectWithLight2
+rotate 90 1 0 0
+translate 0 0 0.5
+scale 0.01 0.01 0.015
+color 0.55 1 0.6 1		//基底オブジェクトカラー指令(OpenGLESへのdraw指令の引数に渡される)
+classend
+class TexObject3D 1007
+shape TilePanelShapeGenerator
+makeshape 0 100 100 0 100 100
+texture grassland repeat	//テキスチャを繰り返し貼り付けする場合はrepeatを指定. デフォルト（指定なし)はGL_CLAMP_TO_EDGE
+shader SP_SimpleTextureSimpleZ
+translate 0 -2 0
+classend
+class Object3D
+shape StlModel
+translate 7 -2 -8
+readshape 2 dog.stl		//独自Stlファイルを読む場合 readshapeに続く引数で指定(ファイルはassetsの中) 第１引数でID指定可能(0～999で指定)
+				//readshape or makeshape節に引数を指定する場合、第１引数は常に指定IDとなる。自動生成の場合は0を指定.
+shader SP_ObjectWithLight
+color 1 0.7 0 1
+scale 0.6 0.6 0.6
+classend
+class MoveObject3D 1009
+shape StlModel 2		//第2引数はシェイプID指定. ShapeID指定がある場合、ShapeGenerator クラスは内容が無視されるがシェイプIDは常に第2引数となるため指定が必要.
+				//diplicateclass と異なり、ShapeIDのみ流用となるため、他のプロパティーは指定が必要.
+shader SP_ObjectWithLight
+classend

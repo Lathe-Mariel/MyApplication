@@ -1,0 +1,129 @@
+@startuml
+class MainActivity extends AppCompatActivity{
+ GameManager manager
+}
+MainActivity *-- GameManager
+class GameManager{
+ Field3D field
+ GLStageRenderer renderer
+ ScreenInput sInput
+ Premadonna prema
+ QuaterSpaceManager qsManager
+ makeStage()
+ +makeNewQuestion()
+ +stageClear()
+}
+GameManager *-- Field3D2
+GameManager *-- GLStageRenderer
+GameManager *-- QuaterSpaceManager
+GameManager *-- ScreenInput
+GamaManager *-- Premadonna
+interface Field{
+}
+class Field3D extends Field{
+}
+class Field3D2 extends Field3D{
+ HashMap<Interger, Object3D> objectMap
+ -ArrayList<Object3D> obstacles
+ +setInputState()
+}
+class GLES{
+}
+class GLStageRenderer extends GLSurfaceView.Renderer{
+ -ArrayList<Object3D> objectList
+ -ArrayList<Object3D> frontObjectList
+ +onSurfaceCreated()
+ +onSurfaceChanged()
+ +onDrawFrame()
+}
+class QuaterSpaceManager{
+ -Stack<Object3D> movableObjectStack
+ -Stack<Object3D> staticObjectStack
+ +registObject3D()
+ +checkCollision()
+}
+abstract class BoundingShape{
+ +collideVsSphere()
+ +collideVsAABB()
+ +acquire2DLocation()
+ +acquire3DLocation()
+}
+class AABB extends BoundingShape{
+}
+class ScreenInput implements View.onTouchListener, Runnable{
+ -GestureDetector mGestureDetector
+ +run()
+ +onTouch()
+ -getColorByScreen()
+}
+ScreenInput *-- GestureDetector
+
+abstract class StageConstructions{
+ ArrayList<Object3D> objectList
+}
+class DefaultStageConstructions extends StageConstructions{
+}
+class BritishStageConstructions extends StageConstructions{
+}
+class AqualiumStageConstructions extends StageConstructions{
+}
+abstract class Premadonna{
+}
+class Cat extends Premadonna{
+}
+
+abstract class CreatableShape{
+ +createShape3D()
+}
+class TexCubuShapeGenerator extends CreatableShape{
+}
+class PipeShapeGenerator extends CreatableShape{
+}
+class TexSphereShapeGenerator extends CreatableShape{
+}
+class InnerHalfSphere extends CreatableShape{
+}
+class StlModel extends CreatableShape{
+ +makeRandomModel()
+}
+class Toast extends CreatableShape{
+}
+class Object3D{
+ boolean moovable
+ Shape3D model
+ int shaderSelectNumber
+ int idColor
+ -QuaterSpaceManager.QuaterySpace locationInSpace4;
+ #BoundingShape barrier
+ +reCalcBoundingShape()
+ +unRegistSpace4()
+ +makeMatrix()
+ +render()
+ +backRender()
+ +close()
+}
+Object3D *-- BoundingShape
+Object3D *-- Shape3D
+class TexObject3D extends Object3D{
+int textureID
+}
+class Input6Cube extends TexObject3D{
+}
+class Texture{
+ {static} +HashMap<Integer, Integer> textureList
+ +addTexture()
+}
+
+abstract class ObjectRail implements Runnable{
+ +setObject3D
+ next()
+}
+ObjectRail *-- Object3D
+class ArrayPatternRail extends ObjectRail{
+}
+class CircleRail extends ObjectRail{
+}
+class StageFileReader{
+ {static} +makeObjects()
+}
+@enduml

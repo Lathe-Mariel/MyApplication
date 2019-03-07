@@ -1,0 +1,12 @@
+101	ステージファイル読み込み中　クラス設定中(Reflection)　ClassNotFoundException
+102	ステージファイル読み込み中　シェーダー設定中　NumberFormatException
+103	ステージファイル読み込み中　シェーダー設定中 シェーダー設定エラー
+104	ステージファイル読み込み中　回転設定中 NumberFormatException
+105	ステージファイル読み込み中　トランスレーション中 NumberFormatException
+106	ステージファイル読み込み中　スケール中 NumberFormatException
+107	ステージファイル読み込み中　カラー設定中 NumberFormatException
+108	ステージファイル読み込み中　makeSphere中 NumberFormatException
+109	ステージファイル読み込み中　IOException
+110	ステージファイル読み込み中　クラス設定中(Reflection) IllegalAccessException
+111	ステージファイル読み込み中　クラス設定中(Reflection) InstantiationException
+112	ステージファイル読み込み中　ファイルクローズ時エラー IOException

@@ -1,0 +1,67 @@
+class Object3D 1000
+shape TexCube
+makeshape
+translate -10 -2 -3
+scale 3 1 3
+color 1 1 1 0.3
+shader SP_ObjectWithLight
+classend
+class TexObject3D 1001
+shape TexCube
+makeshape
+texture woodenbox
+shader SP_TextureWithLight
+rotate 45 1 0 1
+translate 10 -6 0
+classend
+diplicateclass 1002
+translate 0 -6 -10
+classend
+class TexObject3D 1003
+shape TexCube
+makeshape
+texture burberry
+translate 0 -1 7
+shader SP_SimpleTexture
+classend
+class Object3D 1004
+shape SphereEX
+makeshape 0 360 -90 90 72 36
+translate 50 10 0
+scale 1 1 1
+color 1 1 1 1
+shader SP_ObjectWithLight
+classend
+diplicateclass 1005
+scale 5 5 5
+color 0.2 0.2 1 1
+translate -8 5 -8
+classend
+class Object3D 1006
+shape StlModel
+readshape
+shader SP_ObjectWithLight2
+rotate 90 1 0 0
+translate 0 0 1
+scale 0.01 0.01 0.015
+color 0.55 1 0.6 1
+classend
+class TexObject3D 1007
+shape TilePanelShapeGenerator
+makeshape 0 100 100 0 100 100
+texture seabottom repeat
+shader SP_SimpleTextureSimpleZ
+translate 0 -2 0
+classend
+class Object3D 1008
+shape StlModel
+translate 7 -2 -8
+readshape 2 dog.stl
+shader SP_ObjectWithLight
+color 1 0.7 0 1
+scale 0.6 0.6 0.6
+classend
+class MoveObject3D 1009
+shape StlModel 2
+shader SP_ObjectWithLight
+classend
