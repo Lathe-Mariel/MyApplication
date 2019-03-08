@@ -107,7 +107,7 @@ public class Field3D2 implements Field{
 			float accelB=0;
 			float accelZ=0;
 			float accelX=0;
-			accelB = b/4000;
+			accelB = b/5000;
 			int sign =1;
 			if(x < 0)sign = -1;
 			accelX = sign * x * x/80000f;

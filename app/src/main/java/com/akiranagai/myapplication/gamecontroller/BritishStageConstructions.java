@@ -49,6 +49,7 @@ public class BritishStageConstructions extends StageConstructions {
         int roadPictureID3 = new Texture().addTexture(context, R.drawable.marble);  //地面タイル3
         int roadPictureID4 = new Texture().addTexture(context, R.drawable.wooda);  //地面タイル4
         int roadPictureID5 = new Texture().addTexture(context, R.drawable.tileb);  //地面タイル5
+        int roadPictureID6 = new Texture().addTexture(context, R.drawable.rockb);  //地面 道 タイル
         int circulerPictureID = new Texture().addTexture(context, R.drawable.circulertile); //テクスチャを作成
         int tower = new Texture().addTexture(context, R.drawable.trafalger_tower);  //タワーテクスチャ作成
         int bush = new Texture().addTexture(context, R.drawable.ikegakia);  //テクスチャ作成
@@ -305,7 +306,7 @@ public class BritishStageConstructions extends StageConstructions {
         road.setModel(roadModelID);
         Texture.setRepeartTexture(roadPictureID, true);
         road.setTexture(roadPictureID);
-        road.setTranslate(0f, -3.9f, -19.3f);
+        road.setTranslate(0f, -3.9f, -19.f);
         road.setScale(1f,1f,1f);
         road.makeMatrix();
         road.setShader(GLES.SP_SimpleTexture);
@@ -395,7 +396,7 @@ public class BritishStageConstructions extends StageConstructions {
         lawnPanel0.setModel(roadModelID);
         //Texture.setRepeartTexture(roadPictureID, true);
         lawnPanel0.setTexture(lawnPictureID);
-        lawnPanel0.setTranslate(-17.5f, -4.05f, -61.5f);
+        lawnPanel0.setTranslate(-17.3f, -4.05f, -61.5f);
         lawnPanel0.setScale(2.8f,1f,1.f);
         lawnPanel0.makeMatrix();
         lawnPanel0.setShader(GLES.SP_SimpleTexture);
@@ -410,6 +411,17 @@ public class BritishStageConstructions extends StageConstructions {
         lawnPanel1.makeMatrix();
         lawnPanel1.setShader(GLES.SP_SimpleTexture);
         objectList.add(lawnPanel1);
+
+        //左手前　岩道　下部パネル
+        TexObject3D road6 = new TexObject3D();
+        road6.setModel(roadModelID);
+        Texture.setRepeartTexture(roadPictureID6, true);
+        road6.setTexture(roadPictureID6);
+        road6.setTranslate(34f, -4.0f, -22.9f);
+        road6.setScale(1.4f,1f,0.8f);
+        road6.makeMatrix();
+        road6.setShader(GLES.SP_SimpleTexture);
+        objectList.add(road6);
 
         //タワー
         TexObject3D pipe1 = new TexObject3D();
@@ -528,7 +540,7 @@ public class BritishStageConstructions extends StageConstructions {
         TexObject3D backPanel2 = new TexObject3D();
         backPanel2.setModel(new TilePanelShapeGenerator().createShape3D(0, 2));
         backPanel2.setTexture(back2);
-        backPanel2.setTranslate(-19.8f, -100.f, 4f);
+        backPanel2.setTranslate(-28.8f, -100.f, 4f);
         backPanel2.setScale(38,1f,10f);
         backPanel2.setRotate(-90, 1,0,0);
         backPanel2.makeMatrix();

@@ -114,7 +114,6 @@ public class StageSelectActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -166,41 +165,53 @@ public class StageSelectActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_stage_select, container, false);
+            View rootView=null;
+            ImageView imageView=null;
+            ArrayList<String> messages=null;
+
             int selector = getArguments().getInt(ARG_SECTION_NUMBER);
-            ImageView imageView = rootView.findViewById(R.id.imageView);
-            list[selector] = rootView.findViewById(R.id.movingList);
-            ArrayList messages = new ArrayList<String>();
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_list_item_1, messages);
-            list[selector].setAdapter(adapter);
+            if(selector==6){
+                rootView = inflater.inflate(R.layout.setting, container, false);
+
+            }else {
+                rootView = inflater.inflate(R.layout.fragment_stage_select, container, false);
+
+                imageView = rootView.findViewById(R.id.imageView);
+                list[selector] = rootView.findViewById(R.id.movingList);
+                messages = new ArrayList<String>();
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_list_item_1, messages);
+                list[selector].setAdapter(adapter);
+            }
+
 
             switch(selector){
                 case 0:
                     messages.add("Stage0");
-                    messages.add("Level1");
+                    messages.add("Difficulty: 1Level");
                     break;
                 case 1:
-                    messages.add("Stage1");
+                    messages.add("Difficulty: 5Level");
                     break;
                 case 2:
-                    messages.add("Stage2");
+                    messages.add("Difficulty: 11Level");
                     break;
                 case 3:
-                    messages.add("Stage3");
+                    messages.add("Difficulty: 250Level");
                     messages.add("Level 250");
                     //imageView.setImageResource(R.drawable.stage3);
                     break;
                 case 4:
-                    messages.add("Level 2 室町用");
+                    messages.add("Difficulty: 2Level");
+                    messages.add("室町用");
                     imageView.setImageResource(R.drawable.stage4);
                     break;
                 case 5:
                     messages.add("How to play");
-                    messages.add("Level 0");
+                    messages.add("Difficulty: Level 0");
                     imageView.setImageResource(R.drawable.stage5);
                     break;
                 case 6:
-                    messages.add("Stage6");
+
                     //imageView.setImageResource(R.drawable.stage6);
                     break;
             }
@@ -237,24 +248,32 @@ public class StageSelectActivity extends AppCompatActivity {
         @Override
         public void setPrimaryItem(ViewGroup container, final int position, Object object){
             super.setPrimaryItem(container, position, object);
-            if(page == position)return;
-            final float hide_y = -PlaceholderFragment.list[position].getHeight();
+            final Handler handler = new Handler();
+
+            if(page == position)return;  //setPrimaryItem()はシステムから３回呼び出されるので、２，３回目は何もしない
 
             //前ページのList隠し処理
-            for(int i = 0; i < 7; i++){
+            for(int i = 0; i < 6; i++){
                 if(PlaceholderFragment.list[i] != null)
                 PlaceholderFragment.list[i].setY(-PlaceholderFragment.list[i].getHeight());
             }
 
             page = position;
+            if(position ==6)return;  //最終頁はリストビュー　スライド無し
+            final float hide_y = -PlaceholderFragment.list[position].getHeight();
 
             new Thread(new Runnable(){
                 float y = hide_y;
                 public void run(){
                     while(y < 0) {
-                        ListView list = PlaceholderFragment.list[position];
-                        list.setY(y);
-                        Log.d("messaged", "position y: " + y);
+                        final ListView list = PlaceholderFragment.list[position];
+                        handler.post(new Runnable(){
+                            public void run(){
+                                list.setY(y);
+                            }
+                        });
+
+                        //Log.d("messaged", "position y: " + y);
                         y += 8;  //１ステップの移動量Y
                         try {
                             Thread.sleep(10);  //インターバル
@@ -264,13 +283,13 @@ public class StageSelectActivity extends AppCompatActivity {
                     }
                 }
             }).start();
-            Log.d("messaged", "setPrimaryItem    position: " + position);
+            //Log.d("messaged", "setPrimaryItem    position: " + position);
         }
 
         public void destroyItem (ViewGroup container,
                           int position,
                           Object object){
-            Log.d("messaged", "destroyItem    posotion: " +position);
+            //Log.d("messaged", "destroyItem    posotion: " +position);
         }
     }
 }
