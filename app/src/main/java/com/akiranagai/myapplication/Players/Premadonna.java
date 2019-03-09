@@ -52,15 +52,17 @@ public abstract class Premadonna extends TexObject3D {
         calcTranslate[1] = y;
         calcTranslate[2] = z;
 
-        reCalcBoundingShape();
-        qsManager.registObject3D(Premadonna.this);  //移動したので干渉チェックマネージャーへ位置　再登録通知
-                qsManager.checkCollision();  //干渉チェック
 
-        setViewDirection(direction);
-        Matrix.setIdentityM(mMatrix, 0);
-        Matrix.translateM(mMatrix, 0, translateValues[0], translateValues[1], translateValues[2]);
-        Matrix.rotateM(mMatrix, 0, (int)((direction+deltaAlfa*-4)*360/6.28), 0, 1,0);
+        synchronized (manager.renderer) {
+            reCalcBoundingShape();
+            qsManager.registObject3D(Premadonna.this);  //移動したので干渉チェックマネージャーへ位置　再登録通知
+            qsManager.checkCollision();  //干渉チェック
 
+            setViewDirection(direction);
+            Matrix.setIdentityM(mMatrix, 0);
+            Matrix.translateM(mMatrix, 0, translateValues[0], translateValues[1], translateValues[2]);
+            Matrix.rotateM(mMatrix, 0, (int) ((direction + deltaAlfa * -4) * 360 / 6.28), 0, 1, 0);
+        }
     }
     public float getViewArrowX(){
         return viewArrowX;

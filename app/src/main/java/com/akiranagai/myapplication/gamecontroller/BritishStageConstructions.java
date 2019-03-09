@@ -586,6 +586,7 @@ public class BritishStageConstructions extends StageConstructions {
         kps.createAlphabets(0, 19, keyPositionArray);
         TexObject3D cubeAlpha = kps.make6Cube("UVWXYZ", new int[]{20,21,22,23,24,25});
         cubeAlpha.setTranslate(18, 0, 8);
+        cubeAlpha.makeMatrix();
         ArrayList<TexObject3D> list;
         list = kps.getPanels();
         objectList.addAll(list);

@@ -231,8 +231,8 @@ public class GLStageRenderer implements GLSurfaceView.Renderer {
     }
     //毎フレーム描画時に呼ばれる
     @Override
-    public void onDrawFrame(GL10 glUnused) {
-        if (!validProgram || !stageDataReady) return;
+    public synchronized void onDrawFrame(GL10 glUnused) {
+        if (!stageDataReady) return;
 
         screenViewInit();
 

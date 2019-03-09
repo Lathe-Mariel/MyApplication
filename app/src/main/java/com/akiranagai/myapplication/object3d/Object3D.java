@@ -242,14 +242,14 @@ public class Object3D{
      * 事前にマトリックスを合成
      */
     public void makeMatrix(){
-        GameManager.surfaceView.queueEvent(new Runnable() {
-            public void run() {
+        //GameManager.surfaceView.queueEvent(new Runnable() {
+          //  public void run() {
                 Matrix.setIdentityM(mMatrix, 0);
                 Matrix.rotateM(mMatrix, 0, rotateAngleValue, rotateValues[0], rotateValues[1], rotateValues[2]);
                 Matrix.translateM(mMatrix, 0, translateValues[0], translateValues[1], translateValues[2]);
                 Matrix.scaleM(mMatrix, 0, scaleValues[0], scaleValues[1], scaleValues[2]);
-            }
-        });
+            //}
+        //});
     }
 
     public void setMatrix(float[] matrix){

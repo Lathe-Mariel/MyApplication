@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class GameManager {
     public Activity activity;
-    GLStageRenderer renderer;
+    public GLStageRenderer renderer;
     Field3D2 field;
     ScreenInput sInput;
     public static MyGLSurfaceView surfaceView;
