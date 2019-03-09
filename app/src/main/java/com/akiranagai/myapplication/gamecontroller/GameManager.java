@@ -183,17 +183,7 @@ public class GameManager {
 
         public void run() {
             while (isRoop) {
-                new Thread(new Runnable() {
-                    public void run() {
-                        if (sInput.moveReady) {
-                            sInput.moveReady = false;
-                            synchronized (sInput) {
-                                qsManager.checkCollision();
-                                sInput.moveReady = true;
-                            }
-                        }
-                    }
-                }).start();
+
                 try {
                     Thread.sleep(intervalTime);
                 } catch (Exception e) {

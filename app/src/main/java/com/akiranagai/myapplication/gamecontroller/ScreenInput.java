@@ -72,28 +72,21 @@ public class ScreenInput extends View implements View.OnTouchListener {
         this.threashold = s;
     }
 
-    //float[] pointX = new float[2];//current coordinate on the Device screen.
-    //float[] pointY = new float[2];
     float[] zeroX = new float[2];//Input Panel Sensor Center Coordinate on the Device Screen.
     float[] zeroY = new float[2];
     boolean validTouched;
-    //private MotionEvent processingMotionEvent;
 
-    boolean moveReady = true;
+    //boolean moveReady = true;
 
     float[] mouseTouched = new float[14];
 
     public void screenInputFetch(){
 
             postInvalidate();
-            if(moveReady) {
-                synchronized(this) {
-                    if (accelerateX != 0 || accelerateZ != 0 || degreeBeta != 0) {    //sending data to registered listeners.登録されたリスナにデータを送信
+                if (accelerateX != 0 || accelerateZ != 0 || degreeBeta != 0) {    //sending data to registered listeners.登録されたリスナにデータを送信
                         field.setInputState(accelerateX, accelerateZ, degreeBeta);
                         //Log.d("receiveSensorValues", "accelerateX: " + accelerateX + "   , accelerateZ: " + accelerateZ + "   , degreeBeta: " + degreeBeta);
-                    }
                 }
-            }
 
             if(validTouched) {
                 //validTouched = false;

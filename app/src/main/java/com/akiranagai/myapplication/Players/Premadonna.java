@@ -52,8 +52,9 @@ public abstract class Premadonna extends TexObject3D {
         calcTranslate[1] = y;
         calcTranslate[2] = z;
 
-                reCalcBoundingShape();
-                qsManager.registObject3D(Premadonna.this);  //移動したので干渉チェックマネージャーへ通知
+        reCalcBoundingShape();
+        qsManager.registObject3D(Premadonna.this);  //移動したので干渉チェックマネージャーへ位置　再登録通知
+                qsManager.checkCollision();  //干渉チェック
 
         setViewDirection(direction);
         Matrix.setIdentityM(mMatrix, 0);
