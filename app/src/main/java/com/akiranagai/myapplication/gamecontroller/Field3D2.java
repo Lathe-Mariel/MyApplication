@@ -120,11 +120,11 @@ public class Field3D2 implements Field{
 			accelB = accelB>0.2f?0.2f:accelB;
 			accelB = accelB<-0.2f?-0.2f:accelB;
 
-			accelZ = accelZ>0.7f?0.7f:accelZ;
-			accelZ = accelZ<-0.7f?-0.7f:accelZ;
+			accelZ = accelZ>0.6f?0.6f:accelZ;
+			accelZ = accelZ<-0.6f?-0.6f:accelZ;
 
-			accelX = accelX>0.7f?0.7f:accelX;
-			accelX = accelX<-0.7f?-0.7f:accelX;
+			accelX = accelX>0.6f?0.6f:accelX;
+			accelX = accelX<-0.6f?-0.6f:accelX;
 
 			viewAngle -= accelB;
 

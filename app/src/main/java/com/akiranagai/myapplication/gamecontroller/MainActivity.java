@@ -3,6 +3,7 @@ package com.akiranagai.myapplication.gamecontroller;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -42,7 +43,7 @@ GameManager manager;
 
     public void sendMessage() {
         Intent intent = new Intent(this, StageSelectActivity.class);
-        intent.putExtra(EXTRA_MESSAGE, "message");
+        //intent.putExtra(EXTRA_MESSAGE, "message");
         startActivityForResult(intent, 1);
     }
 
@@ -56,6 +57,11 @@ GameManager manager;
 
                 // 返却されてきたintentから値を取り出す
                 String str = intent.getStringExtra( "key" );
+                if(Build.VERSION.SDK_INT <= 10){
+                    finish();
+                }else if(Build.VERSION.SDK_INT >= 21){
+                    finishAndRemoveTask();
+                }
             }
         }
     }

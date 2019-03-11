@@ -540,8 +540,8 @@ public class BritishStageConstructions extends StageConstructions {
         TexObject3D backPanel2 = new TexObject3D();
         backPanel2.setModel(new TilePanelShapeGenerator().createShape3D(0, 2));
         backPanel2.setTexture(back2);
-        backPanel2.setTranslate(-28.8f, -100.f, 4f);
-        backPanel2.setScale(38,1f,10f);
+        backPanel2.setTranslate(-28.8f, -100.f, 2f);
+        backPanel2.setScale(36,1f,8f);
         backPanel2.setRotate(-90, 1,0,0);
         backPanel2.makeMatrix();
         backPanel2.setShader(GLES.SP_SimpleTexture);

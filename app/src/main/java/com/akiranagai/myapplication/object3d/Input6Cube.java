@@ -117,7 +117,7 @@ public class Input6Cube extends TexObject3D {
             shape.normalBuffer.position(realNumber * 4);
             shape.normalBuffer.get(direction, 0, 3);
             for (int i = 0; i < 3; i++) {
-                direction[i] *= 0.05f;
+                direction[i] *= 0.1f;
             }
             innerObject3D.setScale(INNER_BIG,INNER_BIG,INNER_BIG);
         }else{

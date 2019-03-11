@@ -4,11 +4,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.opengl.GLES20;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,7 +25,6 @@ public class ScreenInput extends View implements View.OnTouchListener {
 
     Rect[] rect = new Rect[2];
     int displayWidth, displayHeight;
-    private MotionEvent oldMotionEvent=null;
     float accelerateX, accelerateZ;
     float degreeBeta;//Y軸周りの回転量
     private int threashold;
@@ -35,10 +32,10 @@ public class ScreenInput extends View implements View.OnTouchListener {
 
     private GLStageRenderer renderer;
     private GestureDetector mGestureDetector;
-    Thread thread;
     private Field field; //ゲームステージのメインコントローラ
-    //int interrvalTime = 50;  //キーインプットのポーリングインターバル porling intervale for keyinput
     private static final String TAG = "MyGLSurfaceView";
+
+    private boolean alwaysDrawCross;  //常時　入力位置十字を描画するか
 
     private ArrayList<TexObject3D> backBufferObjects;
 
@@ -58,8 +55,6 @@ public class ScreenInput extends View implements View.OnTouchListener {
         threashold = 51;  //default threashold出力値がこの値以下なら、０出力
         damper = 30        ;//onTouchEventが無い場合の出力減衰値
 
-        oldMotionEvent = MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis()+100, MotionEvent.ACTION_UP, 0, 0, 0);
-
         mGestureDetector = new GestureDetector(mOnGestureListener);
     }
 
@@ -76,6 +71,8 @@ public class ScreenInput extends View implements View.OnTouchListener {
     float[] zeroY = new float[2];
     boolean validTouched;
 
+    float screenRate = 1;
+
     //boolean moveReady = true;
 
     float[] mouseTouched = new float[14];
@@ -84,7 +81,7 @@ public class ScreenInput extends View implements View.OnTouchListener {
 
             postInvalidate();
                 if (accelerateX != 0 || accelerateZ != 0 || degreeBeta != 0) {    //sending data to registered listeners.登録されたリスナにデータを送信
-                        field.setInputState(accelerateX, accelerateZ, degreeBeta);
+                        field.setInputState(accelerateX *screenRate, accelerateZ*screenRate, degreeBeta);
                         //Log.d("receiveSensorValues", "accelerateX: " + accelerateX + "   , accelerateZ: " + accelerateZ + "   , degreeBeta: " + degreeBeta);
                 }
 
@@ -149,6 +146,8 @@ public class ScreenInput extends View implements View.OnTouchListener {
         zeroX[1] = rect[1].centerX();
         zeroY[1] = rect[1].centerY();
 
+        screenRate = (float)(1500 / h);
+
         super.onSizeChanged(w, h, oldw, oldh);
     }
 
@@ -198,9 +197,12 @@ public class ScreenInput extends View implements View.OnTouchListener {
         return true;
     }
 
+    public void setDrawCrossState(boolean b){
+        alwaysDrawCross = b;
+    }
     protected void onDraw(Canvas canvas) {
 
-        if(!validTouched) {
+        if(alwaysDrawCross || !validTouched) {
             mPaint.setStyle(Paint.Style.STROKE);
             for (int i = 0; i < 2; i++) {
                 RectF rectf = new RectF(rect[i]);

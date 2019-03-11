@@ -40,6 +40,7 @@ public class GLActivity extends AppCompatActivity {
         Intent intent = getIntent();
         int stage = intent.getIntExtra("STAGE_NUMBER", 0);
         manager.setCurrentStage(stage);
+        manager.alwaysDrawCross = intent.getBooleanExtra("ALWAYS_DRAW_CROSS", false);
 
         surfaceView = new MyGLSurfaceView(this, manager);
 

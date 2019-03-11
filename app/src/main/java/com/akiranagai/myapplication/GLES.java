@@ -55,10 +55,14 @@ public class GLES {
 
     //フラグメントシェーダのコード
     private final static String SimpleObject_FSCODE =
+
             "precision mediump float;" +
                     "varying vec4 v_Color;" +
                     "void main() {" +
+                    "if(v_Color.a > 0.1){" +
                     "gl_FragColor=v_Color;" +
+                    "}else{" +
+                    "discard;}" +
                     "}";
 
     //*******************************************************************

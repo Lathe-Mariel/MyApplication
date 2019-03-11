@@ -15,13 +15,13 @@ import com.akiranagai.myapplication.object3d.StlModel;
 import java.util.ArrayList;
 
 public class GameManager {
-    public Activity activity;
+    public Activity activity;  //呼び出し元Activityを保持
     public GLStageRenderer renderer;
-    Field3D2 field;
-    ScreenInput sInput;
-    public static MyGLSurfaceView surfaceView;
-    Premadonna prema;
-    QuaterSpaceManager qsManager;
+    Field3D2 field;  //GameManager生成
+    ScreenInput sInput;  //GameManager生成
+    public static MyGLSurfaceView surfaceView;  //GLActivity生成
+    Premadonna prema;  //GameManager生成
+    QuaterSpaceManager qsManager;  //GameManager生成
 
     private Object3D questionObject;
     int questionObjectKey;
@@ -30,6 +30,8 @@ public class GameManager {
     private StageRoopTimer timer;
     private int currentStage = 1;  //プレイ中の面(ステージ)
     static int answerAlphabet = -1;  //ゲームの答えのアルファベット
+
+    boolean alwaysDrawCross;
 
     public static int CLEAR_ID;
 
@@ -59,7 +61,8 @@ public class GameManager {
     }
 
     void init() {
-
+        sInput.setDrawCrossState(alwaysDrawCross);
+        Log.d("messagee", "ALWAYS_DRAW_CROSS: " + alwaysDrawCross);
     }
 
     /**
@@ -71,7 +74,6 @@ public class GameManager {
 
     void makeStage(int stage) {
         CLEAR_ID = new Texture().addTexture(activity.getBaseContext(), R.drawable.stageclear);
-        Log.d("message", "GameManager#makeStage");
 
         field = new Field3D2(this);
         sInput.setField(field);  //このメソッドでmanager.rendererも渡す
@@ -92,7 +94,7 @@ public class GameManager {
         renderer.setStageDataReady(true);  //Renderer#onDrawFrame OpenGL描画ループスタート
 
         stageConstructions.startStage();  //各ステージの独自スタート処理
-        timer = new StageRoopTimer(30);
+        timer = new StageRoopTimer(25);
         timer.start();
     }
 
@@ -113,7 +115,7 @@ public class GameManager {
 
     private GLStageRenderer generateStageFactors(int stageNumber) {
         if (stageNumber == 0) {
-
+            stageConstructions = new ExplainStageConstructions(this);
         } else if (stageNumber == 1) {
             readObjectFromFile("stagea.txt");
             stageConstructions = new DefaultStageConstructions(this);
@@ -127,9 +129,8 @@ public class GameManager {
             //readObjectFormFile("");
             stageConstructions = new BritishStageConstructions(this);
         } else if (stageNumber == 5){
-            stageConstructions = new ExplainStageConstructions(this);
-        }else if(stageNumber==6){
             stageConstructions = new SpaceStageConstructions(this);
+        }else if(stageNumber==6){
         }
         field.putAllObjects(stageConstructions.getObjectList());
         return null;
@@ -174,7 +175,7 @@ public class GameManager {
     }
 
     class StageRoopTimer extends Thread {
-        int intervalTime = 70;
+        int intervalTime = 50;
         boolean isRoop = true;
 
         StageRoopTimer(int time) {

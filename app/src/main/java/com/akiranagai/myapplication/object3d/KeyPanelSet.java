@@ -18,8 +18,8 @@ public class KeyPanelSet {
 
     //private ArrayList<Object3D> alphabetPanels = new ArrayList<>();
     private int panelShapeID;  //キー入力オブジェクトの形状
-    final private int foreColor = Color.rgb(255,0,0);
-    final private int backColor = Color.rgb(255,255,0);
+    private int foreColor = Color.rgb(255,0,0);
+    private int backColor = Color.rgb(255,255,0);
     private int alphaCharTextureID =0;
     public static Map<Integer, TexObject3D> keyPanelList = new HashMap<Integer, TexObject3D>();
     private static int selectedKeyPanel = -1;
@@ -81,6 +81,13 @@ public class KeyPanelSet {
 
     public void setPanelShapeID(int id){
         this.panelShapeID = id;
+    }
+
+    public void setForeColor(int fore){
+        foreColor = fore;
+    }
+    public void setBackColor(int back){
+        backColor = back;
     }
 
     /**

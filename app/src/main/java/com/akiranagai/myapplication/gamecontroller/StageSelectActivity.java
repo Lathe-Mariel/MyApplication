@@ -1,11 +1,14 @@
 package com.akiranagai.myapplication.gamecontroller;
 
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
-import android.os.Looper;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -18,7 +21,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -26,15 +28,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.RadioButton;
 
 import com.akiranagai.myapplication.R;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class StageSelectActivity extends AppCompatActivity {
 
@@ -55,6 +53,8 @@ public class StageSelectActivity extends AppCompatActivity {
     private static ListView movingList;
 
     private static Handler mHandler;
+
+    private boolean alwaysDrawCross;
 
 
     private int stage;
@@ -83,14 +83,19 @@ public class StageSelectActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int stageNumber = mViewPager.getCurrentItem();
+                if(stageNumber < 0 || stageNumber > 5)return;
                 Intent intent = new Intent(StageSelectActivity.this, GLActivity.class);
-                intent.putExtra("STAGE_NUMBER", mViewPager.getCurrentItem());
+                intent.putExtra("STAGE_NUMBER", stageNumber);
+                intent.putExtra("ALWAYS_DRAW_CROSS", alwaysDrawCross);
                 StageSelectActivity.this.startActivityForResult(intent,1);
             }
         });
         button2.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
+                Intent returnIntent = new Intent();
+                setResult(RESULT_OK, returnIntent);
                 if(Build.VERSION.SDK_INT <= 10){
                     finish();
                 }else if(Build.VERSION.SDK_INT >= 21){
@@ -186,8 +191,9 @@ public class StageSelectActivity extends AppCompatActivity {
 
             switch(selector){
                 case 0:
-                    messages.add("Stage0");
-                    messages.add("Difficulty: 1Level");
+                    messages.add("How to play");
+                    messages.add("Difficulty: Level 0");
+                    imageView.setImageResource(R.drawable.stage0);
                     break;
                 case 1:
                     messages.add("Difficulty: 5Level");
@@ -206,8 +212,9 @@ public class StageSelectActivity extends AppCompatActivity {
                     imageView.setImageResource(R.drawable.stage4);
                     break;
                 case 5:
-                    messages.add("How to play");
-                    messages.add("Difficulty: Level 0");
+                    messages.add("Space World");
+                    messages.add("Difficulty: 100Level");
+                    list[selector].setBackgroundColor(Color.argb(100,140,140,255));
                     imageView.setImageResource(R.drawable.stage5);
                     break;
                 case 6:
@@ -248,10 +255,13 @@ public class StageSelectActivity extends AppCompatActivity {
         @Override
         public void setPrimaryItem(ViewGroup container, final int position, Object object){
             super.setPrimaryItem(container, position, object);
-            final Handler handler = new Handler();
 
             if(page == position)return;  //setPrimaryItem()はシステムから３回呼び出されるので、２，３回目は何もしない
+            if(page == 6){  //設定項目　保存
 
+                alwaysDrawCross = ((RadioButton)findViewById(R.id.drawRadio)).isChecked();
+            }
+            final Handler handler = new Handler();
             //前ページのList隠し処理
             for(int i = 0; i < 6; i++){
                 if(PlaceholderFragment.list[i] != null)
@@ -284,6 +294,7 @@ public class StageSelectActivity extends AppCompatActivity {
                 }
             }).start();
             //Log.d("messaged", "setPrimaryItem    position: " + position);
+            System.gc();
         }
 
         public void destroyItem (ViewGroup container,
