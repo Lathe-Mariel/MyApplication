@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 public class Shape3D {
     FloatBuffer vertexBuffer;
+    int vboNumber;
     ShortBuffer indexBuffer;
     FloatBuffer normalBuffer;
     FloatBuffer texcoordBuffer;
@@ -57,6 +58,17 @@ public class Shape3D {
         normalBuffer = n;
         texcoordBuffer = t;
         nIndexs = ni;
+
+        int[] buffers = new int[1];
+        GLES20.glGenBuffers(1, buffers, 0);
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, buffers[0]);
+        vboNumber = buffers[0];
+        GLES20.glBufferData(GLES20.GL_ARRAY_BUFFER, v.capacity()*4, v, GLES20.GL_STATIC_DRAW);
+
+        //gl11.glVertexPointer(3, GL10.GL_FLOAT, 4*5, 0);
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
+
+
         if(shapeID != 0 && identicalShape3DList.containsValue(shapeID)) {
             shapeID = createdObjects++;
             identicalShape3DList.put(shapeID, this);

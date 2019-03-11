@@ -14,7 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.akiranagai.myapplication.Players.Cat;
+import com.akiranagai.myapplication.object3d.Cat;
 import com.akiranagai.myapplication.R;
 import com.akiranagai.myapplication.Texture;
 

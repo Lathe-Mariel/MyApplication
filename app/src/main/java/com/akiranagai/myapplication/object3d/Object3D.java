@@ -5,11 +5,9 @@ import android.opengl.Matrix;
 import android.util.Log;
 
 import com.akiranagai.myapplication.GLES;
-import com.akiranagai.myapplication.Players.Premadonna;
 import com.akiranagai.myapplication.collision.AABB;
 import com.akiranagai.myapplication.collision.BoundingShape;
 import com.akiranagai.myapplication.collision.Float3;
-import com.akiranagai.myapplication.gamecontroller.GameManager;
 import com.akiranagai.myapplication.gamecontroller.QuaterSpaceManager;
 
 import java.nio.FloatBuffer;
@@ -330,9 +328,10 @@ public class Object3D{
     }
 
     public void render() {
+        if(GLES.getCurrentProgram() != shaderSelectNumber)
             GLES.selectProgram(shaderSelectNumber);
-            GLES.updateMatrix(mMatrix);
-            draw(colorValues[0], colorValues[1], colorValues[2], colorValues[3], colorValues[4]);
+        GLES.updateMatrix(mMatrix);
+        draw(colorValues[0], colorValues[1], colorValues[2], colorValues[3], colorValues[4]);
     }
 
     public void backRender(){
@@ -350,8 +349,11 @@ public class Object3D{
     public void draw(float r,float g,float b,float a, float shininess){
         //頂点点列
 
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, model.vboNumber);
         GLES20.glVertexAttribPointer(GLES.positionHandle, 3,
-                GLES20.GL_FLOAT, false, 0, model.vertexBuffer);
+                GLES20.GL_FLOAT, false, 0, 0);
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
+
         int k = 0;
 
         if (GLES.checkLiting()) {
@@ -376,6 +378,7 @@ public class Object3D{
         //
         model.indexBuffer.position(0);
         GLES20.glDrawElements(model.stripOrder, model.nIndexs, GLES20.GL_UNSIGNED_SHORT, model.indexBuffer);
+
     }
 
     public void drawline(float r,float g,float b,float a){

@@ -6,13 +6,12 @@ import android.graphics.Point;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
-import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
 import com.akiranagai.myapplication.GLES;
 import com.akiranagai.myapplication.object3d.InnerHalfSphere;
-import com.akiranagai.myapplication.Players.Premadonna;
+import com.akiranagai.myapplication.object3d.Premadonna;
 import com.akiranagai.myapplication.PointSprite;
 import com.akiranagai.myapplication.R;
 import com.akiranagai.myapplication.StringTextureGenerator;
@@ -39,7 +38,7 @@ public class GLStageRenderer implements GLSurfaceView.Renderer {
 
     private final Context mContext;
     private Premadonna prema;
-    static final int PREMA_STEPBACK = -8;
+    static final int PREMA_STEPBACK = -10;
 
     private boolean validProgram=false; //シェーダプログラムが有効
     private float aspect;//アスペクト比
@@ -53,8 +52,8 @@ public class GLStageRenderer implements GLSurfaceView.Renderer {
     float AngleVer=0f;       //縦移動角（2本指）[deg]
 
     //-------------------------------------------------------------------------------------------------------------------
-    float cameraCenterX=0, cameraCenterZ=-8;//  カメラ中心座標
-    float viewArrowX= 0, viewArrowZ=-4f;//視線方向（ベクトル）
+    //float cameraCenterX=0, cameraCenterZ=-8;//  カメラ中心座標
+    //float viewArrowX= 0, viewArrowZ=-4f;//視線方向（ベクトル）
 
     //視点変更テスト変数
     float alph=-2.f,beta=0f;
@@ -185,28 +184,23 @@ public class GLStageRenderer implements GLSurfaceView.Renderer {
         GLES.putLightAttribute(LightAmb, LightDif, LightSpc);
         GLES.putLightAttribute2(LightAmb2, LightDif2, LightSpc2);
         GLES20.glEnable(GLES20.GL_BLEND);
-        GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);    // 単純なアルファブレンド
+        GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
     }
     public void screenViewInit(){
-        //画面のクリア
+        //Screen Clear
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT |
                 GLES20.GL_DEPTH_BUFFER_BIT);
 
-        //プロジェクション変換（射影変換）--------------------------------------
-        //透視変換（遠近感を作る）
-        //カメラは原点に有り，z軸の負の方向を向いていて，上方向はy軸＋方向である。
         GLES.gluPerspective(pMatrix,
                 viewingangle,  //Y方向の画角
                 aspect, //アスペクト比
                 0.001f,   //ニアクリップ　　　z=-0.001から
-                600.0f);//ファークリップ　　Z=-100までの範囲を表示することになる
+                600.0f);//ファークリップ
         GLES.setPMatrix(pMatrix);
 
-        //カメラビュー変換（視野変換）-----------------------------------
-        //カメラ視点が原点になるような変換
         float[] c1Matrix=new float[16]; //カメラ視点変換マトリックス作成用
         float cameraDeltaX = (float)(PREMA_STEPBACK * Math.sin(prema.getViewDirection()));  //prema の視線方向反対位置にカメラを変位
-        float cameraDeltaZ = (float)(PREMA_STEPBACK * Math.cos(prema.getViewDirection()));  //
+        float cameraDeltaZ = (float)(PREMA_STEPBACK * Math.cos(prema.getViewDirection()));
 
         Matrix.setLookAtM(c1Matrix, 0,
                 (prema.getX()+cameraDeltaX),  //カメラの視点 x
@@ -222,14 +216,14 @@ public class GLStageRenderer implements GLSurfaceView.Renderer {
         this.stageDataReady = ready;
     }
 
-    //画面サイズ変更時に呼ばれる
+    //This method will be called when screen is changed.
     @Override
     public void onSurfaceChanged(GL10 gl10, int w, int h) {
-        //ビューポート変換
+        //view port translation
         GLES20.glViewport(0,0,w,h);
         aspect=(float)w/(float)h;
     }
-    //毎フレーム描画時に呼ばれる
+    //毎フレーム描画時
     @Override
     public synchronized void onDrawFrame(GL10 glUnused) {
         if (!stageDataReady) return;

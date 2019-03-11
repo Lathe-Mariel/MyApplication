@@ -1,4 +1,4 @@
-package com.akiranagai.myapplication.Players;
+package com.akiranagai.myapplication.object3d;
 
 import android.opengl.Matrix;
 import android.util.Log;
@@ -6,15 +6,13 @@ import android.util.Log;
 import com.akiranagai.myapplication.gamecontroller.GLStageRenderer;
 import com.akiranagai.myapplication.gamecontroller.GameManager;
 import com.akiranagai.myapplication.gamecontroller.QuaterSpaceManager;
-import com.akiranagai.myapplication.object3d.Object3D;
-import com.akiranagai.myapplication.object3d.TexObject3D;
 
 public abstract class Premadonna extends TexObject3D {
     private GameManager manager;
     private QuaterSpaceManager qsManager;
 
     int hp;  //ヒットポイント
-    float viewDirection = 0f;  //自機の向き
+    float viewDirection;  //自機の向き
     float viewArrowX, viewArrowZ, viewArrowY=-1f;  //自機の向きベクトル
     GLStageRenderer renderer;
 
@@ -61,6 +59,7 @@ public abstract class Premadonna extends TexObject3D {
             setViewDirection(direction);
             Matrix.setIdentityM(mMatrix, 0);
             Matrix.translateM(mMatrix, 0, translateValues[0], translateValues[1], translateValues[2]);
+            //Matrix.scaleM(mMatrix, 0, 0.05f, 0.05f, 0.05f);
             Matrix.rotateM(mMatrix, 0, (int) ((direction + deltaAlfa * -4) * 360 / 6.28), 0, 1, 0);
         }
     }
@@ -86,6 +85,7 @@ public abstract class Premadonna extends TexObject3D {
     public float getViewDirection(){
         return viewDirection;
     }
+    public abstract void init();
 
 
 }

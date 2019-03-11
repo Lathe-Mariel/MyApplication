@@ -43,6 +43,7 @@ public class ScreenInput extends View implements View.OnTouchListener {
 
     public ScreenInput(GameManager manager){
         super(manager.activity);
+
         this.manager = manager;
 
         mPaint.setStrokeWidth(6);  //入力エリア　描画設定
@@ -145,6 +146,11 @@ public class ScreenInput extends View implements View.OnTouchListener {
         zeroY[0] = rect[0].centerY();
         zeroX[1] = rect[1].centerX();
         zeroY[1] = rect[1].centerY();
+
+        mouseTouched[0] = zeroX[0];
+        mouseTouched[1] = zeroY[0];
+        mouseTouched[2] = zeroX[1];
+        mouseTouched[3] = zeroY[1];
 
         screenRate = (float)(1500 / h);
 

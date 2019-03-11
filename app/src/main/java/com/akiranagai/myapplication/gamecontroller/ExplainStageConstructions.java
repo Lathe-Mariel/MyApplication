@@ -2,18 +2,14 @@ package com.akiranagai.myapplication.gamecontroller;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.opengl.GLES20;
-import android.os.Message;
-import android.util.Log;
 
 import com.akiranagai.myapplication.GLES;
-import com.akiranagai.myapplication.Players.Premadonna;
+import com.akiranagai.myapplication.object3d.Premadonna;
 import com.akiranagai.myapplication.R;
 import com.akiranagai.myapplication.StringTextureGenerator;
 import com.akiranagai.myapplication.Texture;
 import com.akiranagai.myapplication.object3d.KeyPanelSet;
 import com.akiranagai.myapplication.object3d.Object3D;
-import com.akiranagai.myapplication.object3d.Shape3D;
 import com.akiranagai.myapplication.object3d.StlModel;
 import com.akiranagai.myapplication.object3d.TexCubeShapeGenerator;
 import com.akiranagai.myapplication.object3d.TexObject3D;

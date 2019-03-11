@@ -3,9 +3,9 @@ package com.akiranagai.myapplication.gamecontroller;
 import android.app.Activity;
 import android.util.Log;
 
-import com.akiranagai.myapplication.GLES;
-import com.akiranagai.myapplication.Players.Cat;
-import com.akiranagai.myapplication.Players.Premadonna;
+import com.akiranagai.myapplication.object3d.Cat;
+import com.akiranagai.myapplication.object3d.Premadonna;
+import com.akiranagai.myapplication.object3d.Rabbit;
 import com.akiranagai.myapplication.R;
 import com.akiranagai.myapplication.Texture;
 import com.akiranagai.myapplication.object3d.Object3D;
@@ -83,7 +83,7 @@ public class GameManager {
         field.qsManager = qsManager;
 
         prema = new Cat(this);  //Prema を生成、　StageConstructionの中でPremaの位置設定の可能性があるため、その前に生成する必要あり
-        ((Cat) prema).init();
+        prema.init();
         prema.setRenderer(renderer);
         generateStageFactors(stage);  //ステージデータ読み込み
         makeNewQuestion();  //クイズの問題を生成(Alphabet 1個)
@@ -139,12 +139,16 @@ public class GameManager {
     public void stageClear(){
         Log.d("clear", "clear");
         renderer.clear();
-        new Thread(new Runnable(){
+        new Thread(){
             public void run() {
                 try {
                     synchronized (sInput) {
                         field.removeObject(questionObjectKey);
-                        makeNewQuestion();
+                        surfaceView.queueEvent(new Runnable(){
+                            public void run() {
+                                makeNewQuestion();
+                            }
+                        });
                     }
                     Thread.sleep(4000);
 
@@ -152,13 +156,16 @@ public class GameManager {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }}).start();
+            }
+        }.start();
     }
+
     public void makeNewQuestion(){
         questionObject = new Object3D();
-        StlModel stlModel = new StlModel(activity.getBaseContext());
-        int shapeID = stlModel.createShape3D(0);
-        questionObject.setModel(shapeID);
+        final StlModel stlModel = new StlModel(activity.getBaseContext());
+                int shapeID = stlModel.createShape3D(0);
+                questionObject.setModel(shapeID);
+
         stageConstructions.setQuestion(questionObject);
 
         questionObjectKey = field.putObject(questionObject);

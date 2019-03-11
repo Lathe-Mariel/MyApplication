@@ -3,8 +3,7 @@ package com.akiranagai.myapplication.gamecontroller;
 import android.opengl.Matrix;
 import android.util.Log;
 
-import com.akiranagai.myapplication.Players.Premadonna;
-import com.akiranagai.myapplication.collision.AABB;
+import com.akiranagai.myapplication.object3d.Premadonna;
 import com.akiranagai.myapplication.object3d.Object3D;
 
 import java.nio.BufferUnderflowException;
@@ -104,9 +103,9 @@ public class Field3D2 implements Field{
 		@Override
 		public void setInputState(float x, float z, float b){
 
-			float accelB=0;
-			float accelZ=0;
-			float accelX=0;
+			float accelB;
+			float accelZ;
+			float accelX;
 			accelB = b/5000;
 			int sign =1;
 			if(x < 0)sign = -1;

@@ -1,16 +1,11 @@
 package com.akiranagai.myapplication.gamecontroller;
 
-import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
 
-import com.akiranagai.myapplication.BufferUtil;
-import com.akiranagai.myapplication.Players.Cat;
 import com.akiranagai.myapplication.object3d.Object3D;
 
-import java.nio.Buffer;
 import java.nio.BufferUnderflowException;
-import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -171,48 +166,6 @@ public class Field3D implements Field {
      */
     @Override
     public void setInputState(float x, float z, float b){
-        float tmpViewArrowX, tmpViewArrowZ;
-
-        float accelB=0;
-        float accelZ=0;
-        float accelX=0;
-        accelB = b/3000;
-        int sign =1;
-        if(x < 0)sign = -1;
-        accelX = sign * x * x/70000f;
-        sign =1;
-        if(z < 0)sign = -1;
-        accelZ = sign * z * z /70000f;
-
-        //Log.d("receiveSensor", "x: " + accelX + "    z: " + accelZ + "    b: " + accelB);
-
-        accelB = accelB>0.2f?0.2f:accelB;
-        accelB = accelB<-0.2f?-0.2f:accelB;
-
-        accelZ = accelZ>2f?2f:accelZ;
-        accelZ = accelZ<-2f?-2f:accelZ;
-
-        accelX = accelX>3f?3f:accelX;
-        accelX = accelX<-3f?-3f:accelX;
-
-        viewAngle -= accelB;
-//Log.d("math", "Math.cos(viewAngle)  " + Math.cos(viewAngle));
-        //自機位置変位量
-        tmpX = -accelZ * Math.sin(viewAngle) - accelX * Math.cos(viewAngle);
-        tmpZ  = -accelZ * Math.cos(viewAngle) + accelX * Math.sin(viewAngle);
-        //視線方向更新
-        //float newX = (float)((stageRenderer.cameraCenterX + tmpX) * dpi[0]);
-        float[] v1 = {stageRenderer.cameraCenterX, -2, stageRenderer.cameraCenterZ};
-        float[] v2 = {stageRenderer.cameraCenterX + (float)tmpX, -2, stageRenderer.cameraCenterZ + (float)tmpZ};
-        float [] result = tryThrough(v1,v2);
-
-            stageRenderer.cameraCenterX = result[0];
-            stageRenderer.cameraCenterZ = result[2];
-        tmpViewArrowX = (float)(stageRenderer.cameraCenterX + 4* (Math.sin(viewAngle)));
-        tmpViewArrowZ =(float)(stageRenderer.cameraCenterZ+ 4* (Math.cos(viewAngle)));
-        stageRenderer.viewArrowX = tmpViewArrowX;
-        stageRenderer.viewArrowZ = tmpViewArrowZ;
-        Log.d("check", "currentPosition X: " + (result[0]*dpi[0] + fieldBias[0]) + "    Y: " + fieldBias[1] + "    Z: " + (result[2]*dpi[2]+ fieldBias[2]));
 
     }
 

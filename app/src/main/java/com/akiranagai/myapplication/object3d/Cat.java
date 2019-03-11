@@ -1,11 +1,9 @@
-package com.akiranagai.myapplication.Players;
+package com.akiranagai.myapplication.object3d;
 
 import com.akiranagai.myapplication.GLES;
 import com.akiranagai.myapplication.R;
 import com.akiranagai.myapplication.Texture;
 import com.akiranagai.myapplication.gamecontroller.GameManager;
-import com.akiranagai.myapplication.object3d.Object3D;
-import com.akiranagai.myapplication.object3d.TexCubeShapeGenerator;
 
 public class Cat extends Premadonna {
     @Override
@@ -25,6 +23,7 @@ public class Cat extends Premadonna {
         setShader(GLES.SP_SimpleTexture);
     }
 
+@Override
     public void init(){
         if(barrier == null){
             reCalcBoundingShape();

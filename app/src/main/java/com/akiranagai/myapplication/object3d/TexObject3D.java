@@ -19,7 +19,8 @@ public class TexObject3D extends Object3D {
 
     @Override
     public void render() {
-        GLES.selectProgram(shaderSelectNumber);
+        if(GLES.getCurrentProgram() != shaderSelectNumber)
+            GLES.selectProgram(shaderSelectNumber);
 
         Texture.setTexture(textureID);
         GLES.updateMatrix(mMatrix);
@@ -37,8 +38,10 @@ public class TexObject3D extends Object3D {
             GLES20.glVertexAttribPointer(GLES.texcoordHandle, 2,
                     GLES20.GL_FLOAT, false, 0, model.texcoordBuffer);
             //頂点点列
-            GLES20.glVertexAttribPointer(GLES.positionHandle, 3,
-                    GLES20.GL_FLOAT, false, 0, model.vertexBuffer);
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, model.vboNumber);
+        GLES20.glVertexAttribPointer(GLES.positionHandle, 3,
+                GLES20.GL_FLOAT, false, 0, 0);
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
 
         int k = GLES20.glGetError();
         if (GLES.checkLiting()) {
