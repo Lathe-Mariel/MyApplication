@@ -23,9 +23,9 @@ public class Rabbit extends Premadonna {
         model.texcoordBuffer = BufferUtil.makeFloatBuffer(new float[1]);
         setTranslate(translateValues[0], translateValues[1], translateValues[2]);
 
-        setScale(0.01f, 0.01f, 0.01f);
+        setScale(0.05f, 0.05f, 0.05f);
         makeMatrix();
-        setColor(0.5f,0.5f,0.5f,1);
+        setColor(0.3f,0.3f,0.3f,1);
         setShader(GLES.SP_SimpleObject);
     }
 

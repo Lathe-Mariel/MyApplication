@@ -42,6 +42,7 @@ public class GLActivity extends AppCompatActivity {
         manager.setCurrentStage(stage);
         manager.alwaysDrawCross = intent.getBooleanExtra("ALWAYS_DRAW_CROSS", false);
 
+
         surfaceView = new MyGLSurfaceView(this, manager);
 
         RelativeLayout relativeLayout = new RelativeLayout(this);

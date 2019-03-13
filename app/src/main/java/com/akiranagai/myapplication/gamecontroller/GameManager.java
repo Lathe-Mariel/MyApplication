@@ -1,6 +1,11 @@
 package com.akiranagai.myapplication.gamecontroller;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.akiranagai.myapplication.object3d.Cat;
@@ -12,7 +17,12 @@ import com.akiranagai.myapplication.object3d.Object3D;
 import com.akiranagai.myapplication.object3d.StageFileReader;
 import com.akiranagai.myapplication.object3d.StlModel;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.TimeZone;
+
+import static android.app.Activity.RESULT_OK;
+import static android.content.Context.MODE_WORLD_READABLE;
 
 public class GameManager {
     public Activity activity;  //呼び出し元Activityを保持
@@ -26,18 +36,24 @@ public class GameManager {
     private Object3D questionObject;
     int questionObjectKey;
     private StageConstructions stageConstructions = null;
+    private int score;
+    SimpleDateFormat formatter;  //時間表示用
 
     private StageRoopTimer timer;
     private int currentStage = 1;  //プレイ中の面(ステージ)
     static int answerAlphabet = -1;  //ゲームの答えのアルファベット
 
+    private long startTime, progress_time;
+
     boolean alwaysDrawCross;
 
-    public static int CLEAR_ID;
+    public static int CLEAR_ID, TIMEUP_ID;
 
     GameManager(Activity activity) {
         this.activity = activity;
         sInput = new ScreenInput(this);
+        formatter = new SimpleDateFormat("mm:ss.SSS");
+        formatter.setTimeZone(TimeZone.getTimeZone("JST"));
     }
 
     public void setCurrentStage(int stageNumber){
@@ -73,8 +89,10 @@ public class GameManager {
     }
 
     void makeStage(int stage) {
-        CLEAR_ID = new Texture().addTexture(activity.getBaseContext(), R.drawable.stageclear);
+        CLEAR_ID = new Texture().addTexture(activity.getBaseContext(), R.drawable.point);
+        TIMEUP_ID = new Texture().addTexture(activity.getBaseContext(), R.drawable.timeup);
 
+        currentStage = stage;
         field = new Field3D2(this);
         sInput.setField(field);  //このメソッドでmanager.rendererも渡す
 
@@ -94,7 +112,13 @@ public class GameManager {
         renderer.setStageDataReady(true);  //Renderer#onDrawFrame OpenGL描画ループスタート
 
         stageConstructions.startStage();  //各ステージの独自スタート処理
-        timer = new StageRoopTimer(25);
+        int interval = 25;
+        Intent intent = activity.getIntent();
+        if(intent.getBooleanExtra("MAX_MODE", false)){
+            interval = 0;
+        }
+        timer = new StageRoopTimer(interval);
+        startTime = System.currentTimeMillis();
         timer.start();
     }
 
@@ -136,9 +160,9 @@ public class GameManager {
         return null;
     }
 
-    public void stageClear(){
-        Log.d("clear", "clear");
-        renderer.clear();
+    public void correctAnswer(){
+        score += 100;
+        renderer.putToast(CLEAR_ID, 1500);
         new Thread(){
             public void run() {
                 try {
@@ -178,7 +202,61 @@ public class GameManager {
         }
         field.removeAllObjects();
         qsManager = null;
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("stageNumber", currentStage);
+        activity.setResult(RESULT_OK, returnIntent);
         activity.finish();
+    }
+
+    public String getCurrentTime(){
+        String time;
+        progress_time = System.currentTimeMillis() - startTime;
+        if(progress_time > 60000) {
+            time = formatter.format(60000) + "    Score: " + score;
+            try{
+                Thread.sleep(100);
+            }catch(Exception e){e.printStackTrace();}
+            renderer.putToast(TIMEUP_ID, 4000);
+            new Thread(){
+                public void run(){
+                    timeUp();
+                }
+            }.start();
+
+        }else {
+            time = formatter.format(progress_time) + "    Score: " + score;
+        }
+        return time;
+    }
+private boolean isTimeUp;
+    public synchronized void timeUp(){
+        if(!isTimeUp) {
+            isTimeUp = true;
+            //Log.d("messagef", "timeUp");
+
+            SQLiteAccess dataSave = new SQLiteAccess(activity);
+            dataSave.saveData(currentStage, score);
+
+            try{
+                Thread.sleep(4000);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            renderer.setStageDataReady(false);
+            try{
+                Thread.sleep(1500);
+            }catch(Exception e){e.printStackTrace();}
+            destroyStage();
+
+
+            /*
+            SharedPreferences sp = activity.getSharedPreferences("score", Context.MODE_PRIVATE);
+            int hiScore = sp.getInt("HISCORE" + currentStage, 0);
+            if(score > hiScore) {
+                sp.edit().putInt("HISCORE" + currentStage, score).commit();
+            }
+            */
+        }
     }
 
     class StageRoopTimer extends Thread {
@@ -197,7 +275,7 @@ public class GameManager {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                sInput.screenInputFetch();
+                sInput.screenInputFetch();  //キー入力読み取り
             }
         }
     }

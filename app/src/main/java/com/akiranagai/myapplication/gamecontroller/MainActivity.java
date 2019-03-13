@@ -15,16 +15,10 @@ import com.akiranagai.myapplication.object3d.Cat;
 import com.akiranagai.myapplication.R;
 
 public class MainActivity extends AppCompatActivity {
-//private GLStageRenderer renderer;
-FrameLayout layout;
-LinearLayout linearLayout;
-Cat player;
 GameManager manager;
 
-    private final int WC = ViewGroup.LayoutParams.WRAP_CONTENT;
 
     public static Context ct;
-    MyGLSurfaceView surfaceView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -237,7 +237,7 @@ public class ExplainStageConstructions extends StageConstructions {
             try{
                 Thread.sleep(3000);
             }catch(Exception e){e.printStackTrace();}
-            manager.stageClear();
+            manager.correctAnswer();
             try{
                 Thread.sleep(4000);
             }catch(Exception e){e.printStackTrace();}

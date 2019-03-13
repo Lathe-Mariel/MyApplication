@@ -139,7 +139,7 @@ public class Field3D2 implements Field{
 		}
 
 		void stageClear(){
-			manager.renderer.clear();
+			manager.correctAnswer();
 		}
 
 		@Override

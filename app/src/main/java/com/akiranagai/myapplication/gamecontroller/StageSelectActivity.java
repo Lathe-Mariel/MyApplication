@@ -1,6 +1,11 @@
 package com.akiranagai.myapplication.gamecontroller;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
@@ -9,6 +14,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.constraint.solver.widgets.Helper;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -29,9 +35,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.Switch;
 
 import com.akiranagai.myapplication.R;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class StageSelectActivity extends AppCompatActivity {
@@ -54,7 +62,15 @@ public class StageSelectActivity extends AppCompatActivity {
 
     private static Handler mHandler;
 
+    //設定変数群
+    /**
+     * 常時　入力用　十字が画面表示されるか
+     */
     private boolean alwaysDrawCross;
+    /**
+     * ゲームループ インターバル値　ゼロモード
+     */
+    private boolean maxMode;
 
 
     private int stage;
@@ -88,6 +104,7 @@ public class StageSelectActivity extends AppCompatActivity {
                 Intent intent = new Intent(StageSelectActivity.this, GLActivity.class);
                 intent.putExtra("STAGE_NUMBER", stageNumber);
                 intent.putExtra("ALWAYS_DRAW_CROSS", alwaysDrawCross);
+                intent.putExtra("MAX_MODE", maxMode);
                 StageSelectActivity.this.startActivityForResult(intent,1);
             }
         });
@@ -112,9 +129,8 @@ public class StageSelectActivity extends AppCompatActivity {
 
             // 返却結果ステータスとの比較
             if( resultCode == RESULT_OK ){
-
-                // 返却されてきたintentから値を取り出す
-                String str = intent.getStringExtra( "key" );
+                int stageNumber = intent.getIntExtra("stageNumber", 0);
+                PlaceholderFragment.checkHighScore(stageNumber, this);
             }
         }
     }
@@ -167,6 +183,23 @@ public class StageSelectActivity extends AppCompatActivity {
             return fragment;
         }
 
+        public static int checkHighScore(int stageNumber, Activity activity){
+            if(stageNumber == 0)return 0 ;
+            SQLiteAccess data = new SQLiteAccess(activity);
+            Cursor cursor = data.getAllNotes(stageNumber);
+            cursor.moveToFirst();
+            int highScore=0;
+            if(cursor.getCount() !=0) {
+                do {
+                    int score = cursor.getInt(cursor.getColumnIndex("score"));
+                    highScore = score > highScore ? score : highScore;
+                } while (cursor.moveToNext());
+            }
+            data.close();
+
+            return highScore;
+        }
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
@@ -175,8 +208,19 @@ public class StageSelectActivity extends AppCompatActivity {
             ArrayList<String> messages=null;
 
             int selector = getArguments().getInt(ARG_SECTION_NUMBER);
-            if(selector==6){
+            if(selector==6){  //セッティングページ生成
                 rootView = inflater.inflate(R.layout.setting, container, false);
+                Button clearButton = (Button)rootView.findViewById(R.id.clearButton);
+                clearButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            SQLiteOpenHelper helper = new SQLiteAccess(getActivity());
+                            SQLiteDatabase.deleteDatabase(getContext().getDatabasePath(helper.getDatabaseName()));
+                        } catch (Exception e) {
+                        }
+                    }
+                });
 
             }else {
                 rootView = inflater.inflate(R.layout.fragment_stage_select, container, false);
@@ -188,32 +232,35 @@ public class StageSelectActivity extends AppCompatActivity {
                 list[selector].setAdapter(adapter);
             }
 
+            int highScore = checkHighScore(selector, getActivity());  //データベースの該当ステージテーブル サーベイ
 
             switch(selector){
                 case 0:
                     messages.add("How to play");
-                    messages.add("Difficulty: Level 0");
                     imageView.setImageResource(R.drawable.stage0);
                     break;
                 case 1:
                     messages.add("Difficulty: 5Level");
+                    messages.add("Hi Score: " + highScore);
                     break;
                 case 2:
                     messages.add("Difficulty: 11Level");
+                    messages.add("Hi Score: " + highScore);
                     break;
                 case 3:
                     messages.add("Difficulty: 250Level");
-                    messages.add("Level 250");
+                    messages.add("Hi Score: " + highScore);
                     //imageView.setImageResource(R.drawable.stage3);
                     break;
                 case 4:
                     messages.add("Difficulty: 2Level");
-                    messages.add("室町用");
+                    messages.add("Hi Score: " + highScore);
                     imageView.setImageResource(R.drawable.stage4);
                     break;
                 case 5:
                     messages.add("Space World");
                     messages.add("Difficulty: 100Level");
+                    messages.add("Hi Score: " + highScore);
                     list[selector].setBackgroundColor(Color.argb(100,140,140,255));
                     imageView.setImageResource(R.drawable.stage5);
                     break;
@@ -224,7 +271,6 @@ public class StageSelectActivity extends AppCompatActivity {
             }
             return rootView;
         }
-
     }
 
     /**
@@ -260,6 +306,7 @@ public class StageSelectActivity extends AppCompatActivity {
             if(page == 6){  //設定項目　保存
 
                 alwaysDrawCross = ((RadioButton)findViewById(R.id.drawRadio)).isChecked();
+                maxMode = ((Switch)findViewById(R.id.MaxSwitch)).isChecked();
             }
             final Handler handler = new Handler();
             //前ページのList隠し処理

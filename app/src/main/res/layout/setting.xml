@@ -65,6 +65,19 @@
                 android:text="Debug Mode" />
 
         </RadioGroup>
+
+        <Button
+            android:id="@+id/clearButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Clear HiScores"
+            android:textAppearance="@style/TextAppearance.AppCompat" />
+
+        <Switch
+            android:id="@+id/MaxSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Maximum Mode" />
     </LinearLayout>
 
     <LinearLayout

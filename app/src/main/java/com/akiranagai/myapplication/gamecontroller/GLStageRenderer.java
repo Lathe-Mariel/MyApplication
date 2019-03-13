@@ -84,7 +84,6 @@ public class GLStageRenderer implements GLSurfaceView.Renderer {
 
     private StringTextureGenerator dashBoardText;
     private TexObject3D timerPanel;
-    private long startTime, progress_time;
     private boolean stageDataReady;
 
     private int outerTextureID;
@@ -163,13 +162,11 @@ public class GLStageRenderer implements GLSurfaceView.Renderer {
         dashBoardText.setAlfa(210,180);
         timerPanel = new TexObject3D();
         timerPanel.setShader(GLES.SP_SimpleTexture);
-        timerPanel.setModel(new TextPanel().createShape3D(0, 0.5f, 0.1f));
+        timerPanel.setModel(new TextPanel().createShape3D(0, 0.7f, 0.2f));
         timerPanel.setRotate(90, 1,0,0);
-        timerPanel.setTranslate(-0.75f, 0.99f, -0.95f);
+        timerPanel.setTranslate(-0.55f, 0.99f, -0.95f);
         timerPanel.makeMatrix();
         timerPanel.setTexture(dashBoardText.getTextureId());
-
-        startTime = System.currentTimeMillis();
 
         outerSphere = new InnerHalfSphere(360f,0f,90f,72,36,false); //zx平面より+y側にある半球を定義, 内向きが表面の半球 innerface of the half sphere is a front face
     }
@@ -237,12 +234,13 @@ public class GLStageRenderer implements GLSurfaceView.Renderer {
         LightPos2[2] = (float)(20 * Math.sin(light2Angle));
         GLES.setLightPosition2(LightPos2);
 
+        /*
         if(ps != null) {
             GLES.selectProgram(GLES.SP_PointSprite);
             Matrix.setIdentityM(mMatrix, 0);
             GLES.updateMatrix(mMatrix);
             ps.draw(1f,0f,0f,1f,10);
-        }
+        }*/
 
         prema.render();
 
@@ -273,11 +271,9 @@ public class GLStageRenderer implements GLSurfaceView.Renderer {
         Matrix.setIdentityM(cMatrix, 0);
         GLES.setCMatrix(cMatrix);
         //現在の時間でテキスチャー更新
-        progress_time = System.currentTimeMillis() - startTime;
-        SimpleDateFormat formatter = new SimpleDateFormat("mm:ss.SSS");
-        formatter.setTimeZone(TimeZone.getTimeZone("JST"));
-        String time = formatter.format(progress_time);
-        timerPanel.setTexture(dashBoardText.makeStringTexture(time, 50f,Color.parseColor("#0066BBFF"), Color.WHITE));
+
+        String time = manager.getCurrentTime();
+        timerPanel.setTexture(dashBoardText.makeStringTexture(time, 50f,Color.parseColor("#3399DDFF"), Color.WHITE));
         timerPanel.render();
 
         for(int i = 0; i< frontObjectList.size(); i++){  //最前面表示オブジェクトリスト
@@ -285,27 +281,23 @@ public class GLStageRenderer implements GLSurfaceView.Renderer {
         }
     }
 
-    public void clear() {
-        putToast(manager.CLEAR_ID, 3000);
-    }
-
     public void putToast(int textureID, final int time){
         final TexObject3D newMessage = new TexObject3D();
+        newMessage.setTexture(textureID);
         newMessage.setShader(GLES.SP_SimpleTexture);
         newMessage.setModel(new Toast().createShape3D(0, 1.2f, 0.6f));
         //newMessage.setRotate(90, 1,0,0);
         newMessage.setTranslate(0f, 0f, -0.95f);
         newMessage.makeMatrix();
-        newMessage.setTexture(textureID);
         Thread removeThread = new Thread(new Runnable(){
             public void run(){
-                frontObjectList.add(newMessage);
+                addFrontObject(newMessage);
                 try{
                     Thread.sleep(time);
                 }catch(Exception e){
                     e.printStackTrace();
                 }
-                frontObjectList.remove(newMessage);
+                removeFrontObject(newMessage);
             }
         });
         removeThread.start();
@@ -321,13 +313,13 @@ public class GLStageRenderer implements GLSurfaceView.Renderer {
         newMessage.makeMatrix();
         Thread removeThread = new Thread(new Runnable() {
             public void run() {
-                frontObjectList.add(newMessage);
+                addFrontObject(newMessage);
                 try {
                     Thread.sleep(time);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                frontObjectList.remove(newMessage);
+                removeFrontObject(newMessage);
             }
         });
         removeThread.start();

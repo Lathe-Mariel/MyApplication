@@ -413,7 +413,7 @@ public class ScreenInput extends View implements View.OnTouchListener {
                 Log.d("messageb", "tappedPanel: " + btbPixel.get(2));
                 if(KeyPanelSet.tapKeyPanel(pickedAlphabet)) {
                     if (manager.answerAlphabet - 97 == pickedAlphabet) {
-                        manager.stageClear();
+                        manager.correctAnswer();
                         Log.d("message", "Stage Clear!!");
                     } else {
                         btbPixel.position(0);
