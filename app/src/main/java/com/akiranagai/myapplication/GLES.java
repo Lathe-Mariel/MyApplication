@@ -188,7 +188,8 @@ public class GLES {
             "float specularP=pow(max(dot(R,V),0.0),u_MaterialShininess)*dotNLEffect;" +
             "vec4 specular=specularP*u_LightSpecular*u_MaterialSpecular;" +
             //色の指定
-            "v_Color=ambient+diffuse+specular;" +
+            //"v_Color=ambient+diffuse + specular;" +
+                "v_Color=ambient+specular;" +
             //位置の指定
             "gl_Position=u_PMMatrix*a_Position;" +
             //ZBuffer拡張用の拡張計算
@@ -802,7 +803,7 @@ public class GLES {
             GLES20.glEnableVertexAttribArray(normalHandle);
 
             //光源位置の指定   (x, y, z, 1)
-            //GLES20.glUniform4f(GLES.lightPosHandle,CVLightPos[0], CVLightPos[1], CVLightPos[2], 1.0f);
+            GLES20.glUniform4f(GLES.lightPosHandle,CVLightPos[0], CVLightPos[1], CVLightPos[2], 1.0f);
             //光源色の指定 (r, g, b,a)
             GLES20.glUniform4f(GLES.lightAmbientHandle, LightAmb[0], LightAmb[1], LightAmb[2], LightAmb[3]); //周辺光
             GLES20.glUniform4f(GLES.lightDiffuseHandle, LightDif[0], LightDif[1], LightDif[2], LightDif[3]); //乱反射光

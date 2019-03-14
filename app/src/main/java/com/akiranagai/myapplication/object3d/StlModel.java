@@ -210,7 +210,6 @@ public class StlModel extends CreatableShape{
         }
     }
 
-
     @Override
     public int createShape3D(int shapeID) {
         if(!dataReady)return 0;

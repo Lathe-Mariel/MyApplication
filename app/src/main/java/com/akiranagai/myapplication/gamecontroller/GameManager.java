@@ -144,8 +144,8 @@ public class GameManager {
             readObjectFromFile("stagea.txt");
             stageConstructions = new DefaultStageConstructions(this);
         } else if (stageNumber == 2) {
-            readObjectFromFile("stagemayu.txt");
-            stageConstructions = new MayuStageConstructions(this);
+            //readObjectFromFile("stagemayu.txt");
+            stageConstructions = new ShrineStageConstructions(this);
         } else if (stageNumber == 3) {
             readObjectFromFile("stagea.txt");
             stageConstructions = new AqualiumStageConstructions(this);
@@ -154,7 +154,10 @@ public class GameManager {
             stageConstructions = new BritishStageConstructions(this);
         } else if (stageNumber == 5){
             stageConstructions = new SpaceStageConstructions(this);
-        }else if(stageNumber==6){
+        }else if(stageNumber == 6){
+            stageConstructions  = new IkebukuroStageConstructions(this);
+        }else if(stageNumber == 7){
+
         }
         field.putAllObjects(stageConstructions.getObjectList());
         return null;

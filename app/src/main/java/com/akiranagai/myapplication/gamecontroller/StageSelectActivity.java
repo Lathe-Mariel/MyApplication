@@ -100,7 +100,7 @@ public class StageSelectActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 int stageNumber = mViewPager.getCurrentItem();
-                if(stageNumber < 0 || stageNumber > 5)return;
+                if(stageNumber < 0 || stageNumber > SectionsPagerAdapter.PAGES-1)return;
                 Intent intent = new Intent(StageSelectActivity.this, GLActivity.class);
                 intent.putExtra("STAGE_NUMBER", stageNumber);
                 intent.putExtra("ALWAYS_DRAW_CROSS", alwaysDrawCross);
@@ -166,7 +166,7 @@ public class StageSelectActivity extends AppCompatActivity {
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
-        static ListView[] list = new ListView[7];
+        static ListView[] list = new ListView[SectionsPagerAdapter.PAGES];
 
         public PlaceholderFragment() {
         }
@@ -183,21 +183,31 @@ public class StageSelectActivity extends AppCompatActivity {
             return fragment;
         }
 
-        public static int checkHighScore(int stageNumber, Activity activity){
-            if(stageNumber == 0)return 0 ;
+        public static int[] checkHighScore(int stageNumber, Activity activity){
+            if(stageNumber == 0)return new int[]{0};
             SQLiteAccess data = new SQLiteAccess(activity);
             Cursor cursor = data.getAllNotes(stageNumber);
             cursor.moveToFirst();
             int highScore=0;
+            int count=0;
+            int sum=0;
             if(cursor.getCount() !=0) {
                 do {
                     int score = cursor.getInt(cursor.getColumnIndex("score"));
                     highScore = score > highScore ? score : highScore;
+                    count++;
+                    sum += score;
                 } while (cursor.moveToNext());
             }
-            data.close();
+            int average = 0;
+            try {
+                average = sum / count;
+            }catch(ArithmeticException e){
+                e.printStackTrace();
 
-            return highScore;
+            }
+            data.close();
+            return new int[] {highScore, count, average};  //最高点, プレイ回数, 累積点
         }
 
         @Override
@@ -208,7 +218,7 @@ public class StageSelectActivity extends AppCompatActivity {
             ArrayList<String> messages=null;
 
             int selector = getArguments().getInt(ARG_SECTION_NUMBER);
-            if(selector==6){  //セッティングページ生成
+            if(selector==StageSelectActivity.SectionsPagerAdapter.PAGES-1){  //セッティングページ生成
                 rootView = inflater.inflate(R.layout.setting, container, false);
                 Button clearButton = (Button)rootView.findViewById(R.id.clearButton);
                 clearButton.setOnClickListener(new View.OnClickListener() {
@@ -232,41 +242,61 @@ public class StageSelectActivity extends AppCompatActivity {
                 list[selector].setAdapter(adapter);
             }
 
-            int highScore = checkHighScore(selector, getActivity());  //データベースの該当ステージテーブル サーベイ
+            int score[] = checkHighScore(selector, getActivity());  //データベースの該当ステージテーブル サーベイ
 
             switch(selector){
                 case 0:
                     messages.add("How to play");
                     imageView.setImageResource(R.drawable.stage0);
                     break;
-                case 1:
+                case 1:  //桜
                     messages.add("Difficulty: 5Level");
-                    messages.add("Hi Score: " + highScore);
+                    messages.add("Sand Box");
+                    messages.add("Hi Score: " + score[0]);
+                    messages.add("Average: " + score[2]);
+                    messages.add("Play Times: " + score[1]);
                     break;
-                case 2:
+                case 2:  //神社夜
                     messages.add("Difficulty: 11Level");
-                    messages.add("Hi Score: " + highScore);
+                    messages.add("Shrine");
+                    messages.add("Hi Score: " + score[0]);
+                    messages.add("Average: " + score[2]);
+                    messages.add("Play Times: " + score[1]);
                     break;
-                case 3:
+                case 3:  //アクア
                     messages.add("Difficulty: 250Level");
-                    messages.add("Hi Score: " + highScore);
+                    messages.add("Aquarium");
+                    messages.add("Hi Score: " + score[0]);
+                    messages.add("Average: " + score[2]);
+                    messages.add("Play Times: " + score[1]);
                     //imageView.setImageResource(R.drawable.stage3);
                     break;
-                case 4:
+                case 4:  //欧州
                     messages.add("Difficulty: 2Level");
-                    messages.add("Hi Score: " + highScore);
+                    messages.add("Hi Score: " + score[0]);
+                    messages.add("Average: " + score[2]);
+                    messages.add("Play Times: " + score[1]);
                     imageView.setImageResource(R.drawable.stage4);
                     break;
-                case 5:
-                    messages.add("Space World");
+                case 5:  //宇宙
                     messages.add("Difficulty: 100Level");
-                    messages.add("Hi Score: " + highScore);
+                    messages.add("Hi Score: " + score[0]);
+                    messages.add("Average: " + score[2]);
+                    messages.add("Play Times: " + score[1]);
                     list[selector].setBackgroundColor(Color.argb(100,140,140,255));
                     imageView.setImageResource(R.drawable.stage5);
                     break;
                 case 6:
-
+                    messages.add("Difficulty: 700Level");
+                    messages.add("池袋");
+                    messages.add("Hi Score: " + score[0]);
+                    messages.add("Average: " + score[2]);
+                    messages.add("Play Times: " + score[1]);
+                    //list[selector].setBackgroundColor(Color.argb(100,140,140,255));
                     //imageView.setImageResource(R.drawable.stage6);
+                    break;
+                case 7:
+
                     break;
             }
             return rootView;
@@ -279,6 +309,7 @@ public class StageSelectActivity extends AppCompatActivity {
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
         int page;
+        static final int PAGES = 8;
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -295,7 +326,7 @@ public class StageSelectActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 7;
+            return PAGES;
         }
 
         @Override
@@ -303,20 +334,20 @@ public class StageSelectActivity extends AppCompatActivity {
             super.setPrimaryItem(container, position, object);
 
             if(page == position)return;  //setPrimaryItem()はシステムから３回呼び出されるので、２，３回目は何もしない
-            if(page == 6){  //設定項目　保存
+            if(page == PAGES){  //設定項目　保存
 
                 alwaysDrawCross = ((RadioButton)findViewById(R.id.drawRadio)).isChecked();
                 maxMode = ((Switch)findViewById(R.id.MaxSwitch)).isChecked();
             }
             final Handler handler = new Handler();
             //前ページのList隠し処理
-            for(int i = 0; i < 6; i++){
+            for(int i = 0; i < PAGES; i++){
                 if(PlaceholderFragment.list[i] != null)
                 PlaceholderFragment.list[i].setY(-PlaceholderFragment.list[i].getHeight());
             }
 
             page = position;
-            if(position ==6)return;  //最終頁はリストビュー　スライド無し
+            if(position ==PAGES-1)return;  //最終頁はリストビュー　スライド無し
             final float hide_y = -PlaceholderFragment.list[position].getHeight();
 
             new Thread(new Runnable(){

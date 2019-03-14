@@ -8,39 +8,66 @@ import com.akiranagai.myapplication.R;
 import com.akiranagai.myapplication.Texture;
 import com.akiranagai.myapplication.object3d.KeyPanelSet;
 import com.akiranagai.myapplication.object3d.Object3D;
-import com.akiranagai.myapplication.object3d.PipeShapeGenerator;
+import com.akiranagai.myapplication.object3d.StlModel;
+import com.akiranagai.myapplication.object3d.Tex4PanelShapeGenerator;
 import com.akiranagai.myapplication.object3d.TexCubeShapeGenerator;
 import com.akiranagai.myapplication.object3d.TexObject3D;
 import com.akiranagai.myapplication.object3d.TilePanelShapeGenerator;
 
 import java.util.ArrayList;
 
-public class AqualiumStageConstructions extends StageConstructions {
+public class ShrineStageConstructions extends StageConstructions {
 
-    AqualiumStageConstructions(GameManager manager){
+    public ShrineStageConstructions(GameManager manager){
         Context context = manager.activity.getBaseContext();
 
-        int back1 = new Texture().addTexture(context, R.drawable.rockc);  //前景1テクスチャ作成
-        int aneID = new Texture().addTexture(context, R.drawable.seaanemone);  //前景1テクスチャ作成
+        int back1 = new Texture().addTexture(context, R.drawable.shrinea);  //   八坂神社
+        int fence2PictureID = new Texture().addTexture(context, R.drawable.wish);  //   フェンステクスチャ2
+        int handyLightID = new Texture().addTexture(context, R.drawable.lumpa);  //提灯
 
         //右奥 中景パネル
         TexObject3D backPanel2 = new TexObject3D();
         backPanel2.setModel(new TilePanelShapeGenerator().createShape3D(0, 2));
         backPanel2.setTexture(back1);
         backPanel2.setTranslate(-28.8f, -100.f, 2f);
-        backPanel2.setScale(8,1f,8f);
+        backPanel2.setScale(36,1f,8f);
         backPanel2.setRotate(-90, 1,0,0);
         backPanel2.makeMatrix();
         backPanel2.setShader(GLES.SP_SimpleTexture);
         objectList.add(backPanel2);
 
-        TexObject3D seaAnemone = new TexObject3D();
-        seaAnemone.setModel(new PipeShapeGenerator().createShape3D(0, 2,0.5f, (float)Math.PI*2, 12,1));
-        seaAnemone.setTexture(aneID);
-        seaAnemone.setTranslate(0,-3, 10);
-        seaAnemone.fullCalcBoundingShape();
-        seaAnemone.setShader(GLES.SP_SimpleTexture);
-        objectList.add(seaAnemone);
+        //絵馬パネル
+        TexObject3D rightFence = new TexObject3D();
+        int fenceObjectShape = new TilePanelShapeGenerator().createShape3D(0, 1.5f, 6, 0, 6,1);
+        rightFence.setModel(fenceObjectShape);
+        Texture.setRepeartTexture(fence2PictureID, true);
+        rightFence.setTexture(fence2PictureID);
+        rightFence.setTranslate(3f, -45.f, -1f);
+        rightFence.setScale(1.5f,1.5f,4.5f);
+        rightFence.setRotate(-90, 0,0,1);
+        rightFence.fullCalcBoundingShape();
+        //rightFence.makeMatrix();
+        rightFence.setShader(GLES.SP_SimpleTexture);
+        objectList.add(rightFence);
+
+        Object3D tourou = new Object3D();
+        tourou.setModel(new StlModel(context, "tourou.stl").createShape3D(0));
+        tourou.setShader(GLES.SP_ObjectWithLight2);
+        tourou.setTranslate(10,-3.5f,10);
+        tourou.setScale(0.6f, 0.6f, 0.6f);
+        tourou.setColor(0.6f, 0.6f, 0.65f, 1);
+        tourou.fullCalcBoundingShape();
+        objectList.add(tourou);
+
+        //提灯
+        TexObject3D waku = new TexObject3D();
+        waku.setModel(new Tex4PanelShapeGenerator().createShape3D(0,2));
+        waku.setTexture(handyLightID);
+        waku.setTranslate(0,0,0);
+        waku.setScale(3,1,3);
+        waku.makeMatrix();
+        waku.setShader(GLES.SP_SimpleTexture);
+        objectList.add(waku);
 
         //キー入力パネル
         KeyPanelSet kps = new KeyPanelSet();
@@ -82,8 +109,14 @@ public class AqualiumStageConstructions extends StageConstructions {
         objectList.addAll(list);
         manager.sInput.setBuckBufferObjectList(list);  //バックバッファに設定する表示オブジェクトを登録(Alphabet Boxes)
     }
+
     @Override
-    public void setQuestion(Object3D questionObject){}
+    public void setQuestion(Object3D questionObject) {
+
+    }
+
     @Override
-    public void startStage(){}
+    public void startStage() {
+
+    }
 }

@@ -51,6 +51,10 @@ public class GLStageRenderer implements GLSurfaceView.Renderer {
     float AngleHor=0f;       //横移動角（2本指）[deg]
     float AngleVer=0f;       //縦移動角（2本指）[deg]
 
+    private float backR = 0.5f;  //GL Clear Color R
+    private float backG = 0.5f;
+    private float backB = 0.5f;
+
     //-------------------------------------------------------------------------------------------------------------------
     //float cameraCenterX=0, cameraCenterZ=-8;//  カメラ中心座標
     //float viewArrowX= 0, viewArrowZ=-4f;//視線方向（ベクトル）
@@ -148,6 +152,12 @@ public class GLStageRenderer implements GLSurfaceView.Renderer {
         return objectList.get(number);
     }
 
+    public void setGLClearColor(float r, float g, float b){
+        backR = r;
+        backG = g;
+        backB = b;
+    }
+
     //サーフェイス生成時に呼ばれる
     @Override
     public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
@@ -176,7 +186,7 @@ public class GLStageRenderer implements GLSurfaceView.Renderer {
         GLES20.glEnable(GLES20.GL_CULL_FACE);
         GLES20.glFrontFace(GLES20.GL_CCW); //表面のvertexのindex番号はCCWで登録
         GLES20.glCullFace(GLES20.GL_BACK); //裏面は表示しない
-        GLES20.glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+        GLES20.glClearColor(backR, backG, backB, 1.0f);
         //光源の設定
         GLES.putLightAttribute(LightAmb, LightDif, LightSpc);
         GLES.putLightAttribute2(LightAmb2, LightDif2, LightSpc2);

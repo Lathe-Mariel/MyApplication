@@ -23,8 +23,6 @@ public class StageFileReader {
     public static ArrayList<Object3D> makeObjects(Context context, GLSurfaceView surfaceView, String stageFileName){
         ArrayList<Object3D> objectList = new ArrayList();
 
-        context = MainActivity.ct;
-
         InputStream is=null;
         BufferedReader reader;
 

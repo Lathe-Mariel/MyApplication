@@ -31,7 +31,7 @@ public class SQLiteAccess extends SQLiteOpenHelper {
     @Override
 
     public void onCreate(SQLiteDatabase db) {
-        for(k = 0; k < 7; k++)
+        for(k = 0; k < StageSelectActivity.SectionsPagerAdapter.PAGES; k++)
             db.execSQL(SQL_CREATE_ENTRIES0 +k + SQL_CREATE_ENTRIES1);
     }
 
