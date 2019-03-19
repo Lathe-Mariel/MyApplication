@@ -7,7 +7,9 @@ import android.opengl.Matrix;
 import com.akiranagai.myapplication.GLES;
 import com.akiranagai.myapplication.R;
 import com.akiranagai.myapplication.Texture;
+import com.akiranagai.myapplication.object3d.CircleRail;
 import com.akiranagai.myapplication.object3d.KeyPanelSet;
+import com.akiranagai.myapplication.object3d.LowerFacePanelShapeGenerator;
 import com.akiranagai.myapplication.object3d.Object3D;
 import com.akiranagai.myapplication.object3d.Premadonna;
 import com.akiranagai.myapplication.object3d.TexCubeShapeGenerator;
@@ -23,6 +25,8 @@ public class IkebukuroStageConstructions extends StageConstructions {
         this.manager = manager;
         Context context = manager.activity.getBaseContext();
 
+        manager.renderer.setBackTexture(new Texture().addTexture(context, R.drawable.ikesora));
+
         int pictureID1 = new Texture().addTexture(context, R.drawable.ikea); //テクスチャを作成
         int pictureID2 = new Texture().addTexture(context, R.drawable.ikeb); //テクスチャを作成
         int pictureID3 = new Texture().addTexture(context, R.drawable.ikec); //テクスチャを作成
@@ -36,6 +40,8 @@ public class IkebukuroStageConstructions extends StageConstructions {
         int pictureID11 = new Texture().addTexture(context, R.drawable.ikek); //テクスチャを作成
         int pictureID12 = new Texture().addTexture(context, R.drawable.ikel); //テクスチャを作成
         int pictureID13 = new Texture().addTexture(context, R.drawable.ikem); //テクスチャを作成
+        int moguID1 = new Texture().addTexture(context, R.drawable.sunobonekomini); //テクスチャを作成
+        int pictureID15 = new Texture().addTexture(context, R.drawable.fireworksa); //テクスチャを作成
 
         int pictureID100 = new Texture().addTexture(context, R.drawable.tilez); //テクスチャを作成
 
@@ -188,6 +194,19 @@ public class IkebukuroStageConstructions extends StageConstructions {
         bill10.setShader(GLES.SP_SimpleTexture);
         objectList.add(bill10);
 
+        //手前 左奥広場 ビル　パネル
+        TexObject3D eki = new TexObject3D();
+        eki.setModel(billShape);
+        //Texture.setRepeartTexture(ekiwall, true);
+        eki.setTexture(pictureID12);
+        eki.setTranslate(0f, -26f, 30f);
+        eki.setScale(2f,1f,3.5f);
+        eki.setRotate(90, 0,0,1);
+        eki.fullCalcBoundingShape();
+        eki.makeMatrix();
+        eki.setShader(GLES.SP_SimpleTexture);
+        objectList.add(eki);
+
         //センターロード　下部パネル(roadModel 縦長)
         TexObject3D road = new TexObject3D();
         int roadModelID = new TilePanelShapeGenerator().createShape3D(0,24f,43f,0f,48,43);
@@ -199,6 +218,47 @@ public class IkebukuroStageConstructions extends StageConstructions {
         road.makeMatrix();
         road.setShader(GLES.SP_SimpleTexture);
         objectList.add(road);
+
+
+        //手前 右奥広場 ビル1　パネル 4つ谷
+        TexObject3D bill14 = new TexObject3D();
+        bill14.setModel(billShape);
+        //Texture.setRepeartTexture(bill14wall, true);
+        bill14.setTexture(pictureID6);
+        bill14.setTranslate(-1.85f, -18f, -4f);
+        bill14.setScale(2.8f,1f,1.5f);
+        bill14.setRotate(-90, 0,0,1);
+        bill14.fullCalcBoundingShape();
+        bill14.makeMatrix();
+        bill14.setShader(GLES.SP_SimpleTexture);
+        objectList.add(bill14);
+
+        //右 中景1パネル　花火
+        TexObject3D backPanel1 = new TexObject3D();
+        int panelShape = new TilePanelShapeGenerator().createShape3D(0, 2);
+        backPanel1.setModel(panelShape);
+        backPanel1.setTexture(pictureID15);
+        backPanel1.setTranslate(-6f, -75.f, 10f);
+        backPanel1.setScale(13f,-1f,18f);
+        backPanel1.setRotate(-90, 0,0,1);
+        backPanel1.makeMatrix();
+        backPanel1.setShader(GLES.SP_SimpleTexture);
+        objectList.add(backPanel1);
+
+
+        //走るモグ
+        TexObject3D mo3d = new TexObject3D();
+        mo3d.setTexture(moguID1);
+        mo3d.setShader(GLES.SP_SimpleTexture);
+        mo3d.setModel(new LowerFacePanelShapeGenerator().createShape3D(0, 2));
+
+        CircleRail rail = new CircleRail();
+        rail.setOffset(-20, 5, 0);
+        rail.setObject3D(mo3d);
+        rail.setInterruptTime(100);
+        rail.setRailDivide(1080);
+        new Thread(rail).start();
+        objectList.add(mo3d);
 
         //キー入力パネル
         KeyPanelSet kps = new KeyPanelSet();
@@ -242,7 +302,13 @@ public class IkebukuroStageConstructions extends StageConstructions {
     }
     @Override
     public void setQuestion(Object3D questionObject) {
-
+        questionObject.setScale(0.01f,0.01f,0.02f);
+        questionObject.setColor(1f,0.7f,0.7f,1);
+        questionObject.setTranslate(0,16,1.8f);
+        questionObject.setRotate(90,1,0,0);
+        questionObject.fullCalcBoundingShape();
+        //questionObject.makeMatrix();
+        questionObject.setShader(GLES.SP_ObjectWithLight2);
     }
 
     @Override

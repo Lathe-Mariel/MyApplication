@@ -293,7 +293,7 @@ public class StageSelectActivity extends AppCompatActivity {
                     messages.add("Average: " + score[2]);
                     messages.add("Play Times: " + score[1]);
                     //list[selector].setBackgroundColor(Color.argb(100,140,140,255));
-                    //imageView.setImageResource(R.drawable.stage6);
+                    imageView.setImageResource(R.drawable.ike);
                     break;
                 case 7:
 
