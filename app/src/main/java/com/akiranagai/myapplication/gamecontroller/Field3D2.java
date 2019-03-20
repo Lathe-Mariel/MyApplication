@@ -25,12 +25,12 @@ public class Field3D2 implements Field{
 
 	private int answer =-1;
 
-		private float viewAngle;  //視線方向
-		private double tmpX, tmpZ; //位置変位
+	private float viewAngle;  //視線方向
+	private double tmpX, tmpZ; //位置変位
 
-		synchronized void putAllObjects(List<Object3D> list){
-			for(Iterator<Object3D> i = list.iterator(); i.hasNext();)
-				putObject(i.next());
+	synchronized void putAllObjects(List<Object3D> list){
+		for(Iterator<Object3D> i = list.iterator(); i.hasNext();)
+			putObject(i.next());
 		}
 
 		int putObject(Object3D object){

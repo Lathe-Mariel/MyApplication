@@ -13,6 +13,8 @@ public class Cat extends Premadonna {
 
     public Cat(GameManager manager){
         super(manager);
+        hp = 5000;
+        maxHp = 5000;
         translateValues[0] = 0f;
         translateValues[1] = -3.5f;
         translateValues[2] = -5f;

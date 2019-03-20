@@ -414,12 +414,13 @@ public class ScreenInput extends View implements View.OnTouchListener {
                 if(KeyPanelSet.tapKeyPanel(pickedAlphabet)) {
                     if (manager.answerAlphabet - 97 == pickedAlphabet) {
                         manager.correctAnswer();
-                        Log.d("message", "Stage Clear!!");
+                        //Log.d("message", "Stage Clear!!");
                     } else {
-                        btbPixel.position(0);
-                        Log.d("message", "btbPixel.get(2): " + btbPixel.get(2) + "     field.getAnswer(): " + (field.getAnswer() - 97));
+                        manager.badAnswer();
+                        //btbPixel.position(0);
+                        //Log.d("message", "btbPixel.get(2): " + btbPixel.get(2) + "     field.getAnswer(): " + (field.getAnswer() - 97));
                     }
-                    btbPixel.position(0);
+                    //btbPixel.position(0);
                     Log.d("message", "pickupColor: r: " + btbPixel.get(0) + "    g: " + btbPixel.get(1) + "    b: " + btbPixel.get(2));
                 }
 

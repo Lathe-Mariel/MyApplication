@@ -9,6 +9,7 @@ import android.opengl.Matrix;
 import android.view.Display;
 import android.view.WindowManager;
 
+import com.akiranagai.myapplication.BarGraphTextureGenerator;
 import com.akiranagai.myapplication.GLES;
 import com.akiranagai.myapplication.object3d.InnerHalfSphere;
 import com.akiranagai.myapplication.object3d.Premadonna;
@@ -88,6 +89,8 @@ public class GLStageRenderer implements GLSurfaceView.Renderer {
 
     private StringTextureGenerator dashBoardText;
     private TexObject3D timerPanel;
+    private TexObject3D hpBarPanel;
+    private BarGraphTextureGenerator barGraph;
     private boolean stageDataReady;
 
     private int outerTextureID;
@@ -127,7 +130,7 @@ public class GLStageRenderer implements GLSurfaceView.Renderer {
         });
     }
 
-    public void addFrontObject(final Object3D object) {
+    public  void addFrontObject(final Object3D object) {
         manager.surfaceView.queueEvent(new Runnable() {
             @Override
             public void run() {
@@ -177,6 +180,17 @@ public class GLStageRenderer implements GLSurfaceView.Renderer {
         timerPanel.setTranslate(-0.55f, 0.99f, -0.95f);
         timerPanel.makeMatrix();
         timerPanel.setTexture(dashBoardText.getTextureId());
+
+        hpBarPanel = new TexObject3D();
+        hpBarPanel.setShader(GLES.SP_SimpleTexture);
+        hpBarPanel.setModel(new TextPanel().createShape3D(0, 0.7f, 0.10f));
+        hpBarPanel.setRotate(90, 1,0,0);
+        hpBarPanel.setTranslate(-0.55f, 0.99f, -0.78f);
+        hpBarPanel.makeMatrix();
+
+        barGraph = new BarGraphTextureGenerator(Color.RED, Color.BLACK, Color.GRAY, 0);
+        barGraph.setMaxValue(prema.getMaxHp());
+        //onSurfaceChangedに続きの処理あり(画面サイズ必要なため)
 
         outerSphere = new InnerHalfSphere(360f,0f,90f,72,36,false); //zx平面より+y側にある半球を定義, 内向きが表面の半球 innerface of the half sphere is a front face
     }
@@ -229,6 +243,10 @@ public class GLStageRenderer implements GLSurfaceView.Renderer {
         //view port translation
         GLES20.glViewport(0,0,w,h);
         aspect=(float)w/(float)h;
+        int wi = (int)(w *0.25);
+        barGraph.setWidth(wi);
+        barGraph.setHeight(wi/8);
+        hpBarPanel.setTexture(barGraph.refleshBar(prema.getHp()));
     }
     //毎フレーム描画時
     @Override
@@ -286,6 +304,9 @@ public class GLStageRenderer implements GLSurfaceView.Renderer {
         timerPanel.setTexture(dashBoardText.makeStringTexture(time, 50f,Color.parseColor("#3399DDFF"), Color.WHITE));
         timerPanel.render();
 
+        hpBarPanel.setTexture(barGraph.refleshBar(prema.getHp()));
+        hpBarPanel.render();
+
         for(int i = 0; i< frontObjectList.size(); i++){  //最前面表示オブジェクトリスト
             frontObjectList.get(i).render();
         }
@@ -313,7 +334,10 @@ public class GLStageRenderer implements GLSurfaceView.Renderer {
         removeThread.start();
     }
 
+    boolean toast2 = false;
     public void putToast2(int textureID, final int time){
+        if(toast2)return;
+        toast2=true;
         final TexObject3D newMessage = new TexObject3D();
         newMessage.setTexture(textureID);
         newMessage.setShader(GLES.SP_SimpleTexture);
@@ -330,6 +354,7 @@ public class GLStageRenderer implements GLSurfaceView.Renderer {
                     e.printStackTrace();
                 }
                 removeFrontObject(newMessage);
+                toast2=false;
             }
         });
         removeThread.start();

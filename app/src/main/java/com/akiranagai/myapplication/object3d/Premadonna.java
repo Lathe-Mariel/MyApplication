@@ -3,6 +3,7 @@ package com.akiranagai.myapplication.object3d;
 import android.opengl.Matrix;
 import android.util.Log;
 
+import com.akiranagai.myapplication.R;
 import com.akiranagai.myapplication.gamecontroller.GLStageRenderer;
 import com.akiranagai.myapplication.gamecontroller.GameManager;
 import com.akiranagai.myapplication.gamecontroller.QuaterSpaceManager;
@@ -12,6 +13,7 @@ public abstract class Premadonna extends TexObject3D {
     private QuaterSpaceManager qsManager;
 
     int hp;  //ヒットポイント
+    int maxHp;
     float viewDirection;  //自機の向き
     float viewArrowX, viewArrowZ, viewArrowY=-1f;  //自機の向きベクトル
     GLStageRenderer renderer;
@@ -22,6 +24,24 @@ public abstract class Premadonna extends TexObject3D {
         this.manager = manager;
         this.qsManager = manager.getQuaterSpaceManager();
         setMovable(true);
+    }
+
+    public void affectHp(double delta){
+        hp += delta;
+        if(hp < 0)
+            hp = 0;
+    }
+
+    public void crash(double value){
+          //      renderer.putToast2(manager.CRASH_ID, 500);
+        affectHp(value);
+    }
+
+    public int getMaxHp(){
+        return maxHp;
+    }
+    public int getHp(){
+        return hp;
     }
 
     /**
@@ -61,6 +81,7 @@ public abstract class Premadonna extends TexObject3D {
             Matrix.translateM(mMatrix, 0, translateValues[0], translateValues[1], translateValues[2]);
             //Matrix.scaleM(mMatrix, 0, 0.05f, 0.05f, 0.05f);
             Matrix.rotateM(mMatrix, 0, (int) ((direction + deltaAlfa * -4) * 360 / 6.28), 0, 1, 0);
+            Log.d("messager", "HP: " + hp);
         }
     }
     public float getViewArrowX(){

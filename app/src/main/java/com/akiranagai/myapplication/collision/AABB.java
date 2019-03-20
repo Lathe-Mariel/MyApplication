@@ -3,6 +3,7 @@ package com.akiranagai.myapplication.collision;
 import android.util.Log;
 
 import com.akiranagai.myapplication.object3d.Object3D;
+import com.akiranagai.myapplication.object3d.Premadonna;
 
 public class AABB extends BoundingShape{
     Float3 point;  //-側　座標
@@ -69,11 +70,11 @@ public class AABB extends BoundingShape{
     }
 
 @Override
-    public void collideVsSphere(Object3D object){
-        //Log.d("messageb", "AABB####collideVsSphere");
+    public void collideVsSphere(final Object3D object){
+        Log.d("messager", "AABB####collideVsSphere");
         float[] v2 = object.getCalcPosition();
         //Log.d("messageb", "translateValues    [0]: " + v2[0] + "  [1]: " + v2[1] + "  [2]: " + v2[2]);
-        float r = object.getBoundingShape().radius;
+        final float r = object.getBoundingShape().radius;
         float[] backDirection = new float[3];
         double sqLen = 0;
         for (int i = 0; i < 3; i++) {
@@ -88,13 +89,20 @@ public class AABB extends BoundingShape{
             }
         }
 
-        double distance = Math.sqrt(sqLen) - r;
-        if(distance < 0) {
+        //double distance = sqLen - (r*r);
+
+        if(sqLen < r*r) {
+            final double distance = Math.sqrt(sqLen) - r;
+            //distance = Math.sqrt(distance);
             Float3 returnVector = new Float3(backDirection);
             returnVector.norm();
             returnVector = returnVector.multi((float)-distance);
-            for(int i =0; i < 3; i++)
+            for(int i =0; i < 3; i++) {
                 v2[i] = v2[i] + returnVector.get(i);
+            }
+            if(object instanceof Premadonna){
+                ((Premadonna)object).crash(-(distance*4)*(distance*4));
+            }
             object.setTranslate(v2[0], v2[1],v2[2]);
         }
     }

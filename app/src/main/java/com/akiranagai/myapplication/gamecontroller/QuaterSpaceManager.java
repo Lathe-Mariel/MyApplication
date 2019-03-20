@@ -139,7 +139,7 @@ public class QuaterSpaceManager {
         //カレント動 vs カレント動  &  カレント動 vs カレント静  &  カレント動 vs スタック静  &  カレント動 vs スタック動
         for(int i = 0; i < currentSpace.movingObjectList.size(); i++) {
             Object3D movingObj = currentSpace.movingObjectList.get(i);
-            for (int k = i; k < currentSpace.movingObjectList.size(); k++) {  //カレント動 vs カレント動
+            for (int k = i+1; k < currentSpace.movingObjectList.size(); k++) {  //カレント動 vs カレント動
                 currentSpace.movingObjectList.get(k).getBoundingShape().collideVsSphere(movingObj);
             }
             for(int k = 0; k < currentSpace.obstacleList.size(); k++){  //カレント動 vs カレント静

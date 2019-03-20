@@ -47,7 +47,7 @@ public class GameManager {
 
     boolean alwaysDrawCross;
 
-    public static int CLEAR_ID, TIMEUP_ID;
+    public static int CLEAR_ID, TIMEUP_ID, CRASH_ID, BAD_ID;
 
     GameManager(Activity activity) {
         this.activity = activity;
@@ -91,6 +91,8 @@ public class GameManager {
     void makeStage(int stage) {
         CLEAR_ID = new Texture().addTexture(activity.getBaseContext(), R.drawable.point);
         TIMEUP_ID = new Texture().addTexture(activity.getBaseContext(), R.drawable.timeup);
+        CRASH_ID = new Texture().addTexture(activity.getBaseContext(), R.drawable.crash);
+        BAD_ID = new Texture().addTexture(activity.getBaseContext(), R.drawable.badanswer);
 
         currentStage = stage;
         field = new Field3D2(this);
@@ -187,6 +189,11 @@ public class GameManager {
         }.start();
     }
 
+    public void badAnswer(){
+        renderer.putToast2(BAD_ID, 800);
+        prema.affectHp(-1000);
+    }
+
     public void makeNewQuestion(){
         questionObject = new Object3D();
         final StlModel stlModel = new StlModel(activity.getBaseContext());
@@ -237,6 +244,7 @@ private boolean isTimeUp;
             isTimeUp = true;
             //Log.d("messagef", "timeUp");
 
+            score += (int)(prema.getHp()/10);
             SQLiteAccess dataSave = new SQLiteAccess(activity);
             dataSave.saveData(currentStage, score);
 
