@@ -13,7 +13,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class BarGraphTextureGenerator {
 
-    final int textSize = 20;
+    final int textSize = 36;
     private int foreAlfa=180;
     private int backAlfa=160;
     private int TextureId=-1;
@@ -43,7 +43,7 @@ public class BarGraphTextureGenerator {
     }
     public void setHeight(int value){
         this.backHeight = value;
-        charPositionY = value - 33;
+        charPositionY = value-5;
 
     }
 
@@ -78,7 +78,7 @@ public class BarGraphTextureGenerator {
         paint.setAlpha(foreAlfa);
         canvas.drawRect(new Rect(0,0, ((int)(backWidth * value/maxValue)) , backHeight), paint);  //バーグラフ描画
 
-        Log.d("messager", "backWidth: " + backWidth + "    backHeight: " + backHeight);
+        //Log.d("messager", "backWidth: " + backWidth + "    backHeight: " + backHeight);
 
         paint.setColor(charColor);
         canvas.drawText(text, 5, charPositionY, paint);

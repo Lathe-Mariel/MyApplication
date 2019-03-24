@@ -265,7 +265,9 @@ public class StringTextureGenerator {
     public static void deleteTexture(int textureId){
         final int[] textures = new int[1];
         if (textureId != -1) {
-            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureId);
+            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
+           // GLES20.glDeleteTextures(1, textures, 0);
+            textures[0] = textureId;
             GLES20.glDeleteTextures(1, textures, 0);
         }
     }

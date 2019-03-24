@@ -11,10 +11,12 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.constraint.solver.widgets.Helper;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -283,7 +285,7 @@ public class StageSelectActivity extends AppCompatActivity {
                     messages.add("Hi Score: " + score[0]);
                     messages.add("Average: " + score[2]);
                     messages.add("Play Times: " + score[1]);
-                    list[selector].setBackgroundColor(Color.argb(100,140,140,255));
+                    list[selector].setBackgroundColor(Color.argb(80,140,140,255));
                     imageView.setImageResource(R.drawable.stage5);
                     break;
                 case 6:
@@ -292,7 +294,7 @@ public class StageSelectActivity extends AppCompatActivity {
                     messages.add("Hi Score: " + score[0]);
                     messages.add("Average: " + score[2]);
                     messages.add("Play Times: " + score[1]);
-                    //list[selector].setBackgroundColor(Color.argb(100,140,140,255));
+                    list[selector].setBackgroundColor(Color.argb(80, 100,150,255));
                     imageView.setImageResource(R.drawable.ike);
                     break;
                 case 7:

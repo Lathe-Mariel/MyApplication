@@ -104,7 +104,6 @@ public class ExplainStageConstructions extends StageConstructions {
         questionObject.setShader(GLES.SP_ObjectWithLight2);
         //objectList.add(questionObject);
 
-
         manager.questionObjectKey = manager.field.putObject(questionObject);
         this.question = questionObject;
     }
@@ -130,6 +129,7 @@ public class ExplainStageConstructions extends StageConstructions {
     class MoveQuestion extends Thread {
         GLStageRenderer renderer = manager.renderer;
         Premadonna prema = manager.prema;
+        int fingerModel;
 
         @Override
         public void run() {
@@ -154,7 +154,6 @@ public class ExplainStageConstructions extends StageConstructions {
                     e.printStackTrace();
                 }
             }
-
 
             //A回転
             for (int i = 0; i < 90; i++) {
@@ -247,29 +246,39 @@ public class ExplainStageConstructions extends StageConstructions {
             final float fingerX=0.85f;
             final float fingerY=-0.65f;
             final TexObject3D fingerR = new TexObject3D();
-            fingerR.setModel(new Toast().createShape3D(0,0.3f,0.3f));
-            fingerR.setTexture(fingerID);
-            fingerR.setTranslate(fingerX, fingerY, -0.95f);
-            fingerR.makeMatrix();
-            fingerR.setShader(GLES.SP_SimpleTexture);
-            manager.surfaceView.queueEvent(new Runnable() {
-                @Override
-                public void run() {
-                    renderer.addFrontObject(fingerR);
-                }
-            });
             final TexObject3D fingerL = new TexObject3D();
-            fingerL.setModel(new Toast().createShape3D(0,0.3f,0.3f));
-            fingerL.setTexture(fingerID);
-            fingerL.setTranslate(-fingerX, fingerY, -0.95f);
-            fingerL.makeMatrix();
-            fingerL.setShader(GLES.SP_SimpleTexture);
+
             manager.surfaceView.queueEvent(new Runnable() {
                 @Override
                 public void run() {
+                    fingerModel = new Toast().createShape3D(0, 0.3f, 0.3f);
+
+                    fingerR.setModel(fingerModel);
+                    fingerR.setTexture(fingerID);
+                    fingerR.setTranslate(fingerX, fingerY, -0.95f);
+                    fingerR.makeMatrix();
+                    fingerR.setShader(GLES.SP_SimpleTexture);
+                    // manager.surfaceView.queueEvent(new Runnable() {
+                    //   @Override
+                    // public void run() {
+                    renderer.addFrontObject(fingerR);
+
+                    fingerL.setModel(fingerModel);
+                    fingerL.setTexture(fingerID);
+                    fingerL.setTranslate(-fingerX, fingerY, -0.95f);
+                    fingerL.makeMatrix();
+                    fingerL.setShader(GLES.SP_SimpleTexture);
+                    //  manager.surfaceView.queueEvent(new Runnable() {
+                    //    @Override
+                    //  public void run() {
                     renderer.addFrontObject(fingerL);
                 }
             });
+                //}
+            //});
+
+                //}
+            //});
             new MessageTextureGenerator2().start();
 
             try{
@@ -296,7 +305,6 @@ public class ExplainStageConstructions extends StageConstructions {
                     Thread.sleep(1000);
             }catch(Exception e){e.printStackTrace();}
 
-
             //後退 教示
             fingerR.setTranslate(fingerX, fingerY-0.3f, -0.95f);
             fingerR.makeMatrix();
@@ -312,7 +320,6 @@ public class ExplainStageConstructions extends StageConstructions {
                     e.printStackTrace();
                 }
             }
-
 
             try{
                 Thread.sleep(1000);
@@ -333,7 +340,6 @@ public class ExplainStageConstructions extends StageConstructions {
                     e.printStackTrace();
                 }
             }
-
 
             try{
                 Thread.sleep(1000);
@@ -400,12 +406,13 @@ public class ExplainStageConstructions extends StageConstructions {
                 }
             });
         }
-
     }
 
         class MessageTextureGenerator extends Thread{
             String[] messages;
             private final int TIME_GAP = 600;
+
+            StringTextureGenerator stg;
 
             int textureID = -1;
             int count = 0;
@@ -428,7 +435,7 @@ public class ExplainStageConstructions extends StageConstructions {
 
                 interval = new int[messages.length];
                 interval[0]=4000;
-                interval[1]=4000;
+                interval[1]=4500;
                 interval[2]=5500;
                 interval[3]=5000;
                 interval[4]=4500;
@@ -443,30 +450,33 @@ public class ExplainStageConstructions extends StageConstructions {
             }
 
             public void run(){
+                stg = new StringTextureGenerator();
+                stg.setAlfa(200,0);
                 for(int count = 0; count < messages.length; count++) {
                     final String message = messages[count];
+                    final int counta = count;
                     synchronized (this) {
                         manager.surfaceView.queueEvent(new Runnable() {
                             public void run() {
-                                StringTextureGenerator.deleteTexture(textureID);
-                                synchronized (MessageTextureGenerator.this) {
-                                    StringTextureGenerator stg = new StringTextureGenerator();
-                                    stg.setAlfa(200, 0);
+                                //StringTextureGenerator.deleteTexture(textureID);
+                               synchronized (MessageTextureGenerator.this) {
+                                  //  StringTextureGenerator stg = new StringTextureGenerator();
+                                    //stg.setAlfa(200, 0);
                                     textureID = stg.makeStringTexture2(message, 50, Color.parseColor("#006666FF"), Color.parseColor("#00FFFFFF"));
-                                    MessageTextureGenerator.this.notify();
+                                    //MessageTextureGenerator.this.notify();
+                                   renderer.putToast2(textureID, interval[counta]);
                                 }
                             }
                         });
 
-
                         try {
-                            wait();
+                            //wait();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
 
-                    renderer.putToast2(textureID, interval[count]);
+                    //renderer.putToast2(textureID, interval[count]);
                     try {
                         Thread.sleep(interval[count] + TIME_GAP);
                     } catch (Exception e) {
@@ -518,6 +528,7 @@ public class ExplainStageConstructions extends StageConstructions {
         public void run(){
             for(int count = 0; count < messages.length; count++) {
                 final String message = messages[count];
+                final int counta = count;
                 synchronized (this) {
                     manager.surfaceView.queueEvent(new Runnable() {
                         public void run() {
@@ -526,20 +537,20 @@ public class ExplainStageConstructions extends StageConstructions {
                                 StringTextureGenerator stg = new StringTextureGenerator();
                                 stg.setAlfa(200, 0);
                                 textureID = stg.makeStringTexture2(message, 50, Color.parseColor("#006666FF"), Color.parseColor("#00FFFFFF"));
-                                MessageTextureGenerator2.this.notify();
+                                //MessageTextureGenerator2.this.notify();
+                                renderer.putToast2(textureID, counta);
                             }
                         }
                     });
 
-
                     try {
-                        wait();
+                       // wait();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
 
-                renderer.putToast2(textureID, interval[count]);
+                //renderer.putToast2(textureID, interval[count]);
                 try {
                     Thread.sleep(interval[count] + TIME_GAP);
                 } catch (Exception e) {

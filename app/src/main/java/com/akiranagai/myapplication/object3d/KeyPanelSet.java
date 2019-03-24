@@ -32,9 +32,9 @@ public class KeyPanelSet {
         int count = endAlphabet - startAlphabet + 1;
         float[] position = new float[count*3];
         for(int i = 0; i < count; i++){
-            position[i] = (float)i*2; //X
-            position[i+1] = -3.5f;   //Y
-            position[i+2] = 4f;  //Z位置
+            position[i*3] = (float)i*2; //X
+            position[i*3+1] = -3.5f;   //Y
+            position[i*3+2] = 4f;  //Z位置
         }
         return createAlphabets(startAlphabet, endAlphabet, position);
     }

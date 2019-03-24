@@ -130,7 +130,7 @@ public class GLStageRenderer implements GLSurfaceView.Renderer {
         });
     }
 
-    public  void addFrontObject(final Object3D object) {
+    public void addFrontObject(final Object3D object) {
         manager.surfaceView.queueEvent(new Runnable() {
             @Override
             public void run() {
@@ -183,9 +183,9 @@ public class GLStageRenderer implements GLSurfaceView.Renderer {
 
         hpBarPanel = new TexObject3D();
         hpBarPanel.setShader(GLES.SP_SimpleTexture);
-        hpBarPanel.setModel(new TextPanel().createShape3D(0, 0.7f, 0.10f));
-        hpBarPanel.setRotate(90, 1,0,0);
-        hpBarPanel.setTranslate(-0.55f, 0.99f, -0.78f);
+        hpBarPanel.setModel(new Toast().createShape3D(0, 0.7f, 0.10f));
+        //hpBarPanel.setRotate(90, 1,0,0);
+        hpBarPanel.setTranslate(-0.55f, 0.78f, 0.99f);
         hpBarPanel.makeMatrix();
 
         barGraph = new BarGraphTextureGenerator(Color.RED, Color.BLACK, Color.GRAY, 0);
@@ -245,7 +245,7 @@ public class GLStageRenderer implements GLSurfaceView.Renderer {
         aspect=(float)w/(float)h;
         int wi = (int)(w *0.25);
         barGraph.setWidth(wi);
-        barGraph.setHeight(wi/8);
+        barGraph.setHeight(wi/15);
         hpBarPanel.setTexture(barGraph.refleshBar(prema.getHp()));
     }
     //毎フレーム描画時
@@ -320,7 +320,7 @@ public class GLStageRenderer implements GLSurfaceView.Renderer {
         //newMessage.setRotate(90, 1,0,0);
         newMessage.setTranslate(0f, 0f, -0.95f);
         newMessage.makeMatrix();
-        Thread removeThread = new Thread(new Runnable(){
+        Thread removeThread = new Thread(){
             public void run(){
                 addFrontObject(newMessage);
                 try{
@@ -330,14 +330,14 @@ public class GLStageRenderer implements GLSurfaceView.Renderer {
                 }
                 removeFrontObject(newMessage);
             }
-        });
+        };
         removeThread.start();
     }
 
-    boolean toast2 = false;
+   // boolean toast2 = false;
     public void putToast2(int textureID, final int time){
-        if(toast2)return;
-        toast2=true;
+       // if(toast2)return;
+        //toast2=true;
         final TexObject3D newMessage = new TexObject3D();
         newMessage.setTexture(textureID);
         newMessage.setShader(GLES.SP_SimpleTexture);
@@ -345,7 +345,7 @@ public class GLStageRenderer implements GLSurfaceView.Renderer {
         //newMessage.setRotate(90, 1,0,0);
         newMessage.setTranslate(0f, -0.8f, -0.95f);
         newMessage.makeMatrix();
-        Thread removeThread = new Thread(new Runnable() {
+        Thread removeThread = new Thread() {
             public void run() {
                 addFrontObject(newMessage);
                 try {
@@ -354,9 +354,9 @@ public class GLStageRenderer implements GLSurfaceView.Renderer {
                     e.printStackTrace();
                 }
                 removeFrontObject(newMessage);
-                toast2=false;
+ //               toast2=false;
             }
-        });
+        };
         removeThread.start();
     }
 

@@ -33,7 +33,13 @@ public abstract class Premadonna extends TexObject3D {
     }
 
     public void crash(double value){
-          //      renderer.putToast2(manager.CRASH_ID, 500);
+        manager.surfaceView.queueEvent(new Runnable() {
+            @Override
+            public void run() {
+                renderer.putToast2(manager.CRASH_ID, 300);
+            }
+        });
+        Log.d("message-hp", "damage: " + value);
         affectHp(value);
     }
 

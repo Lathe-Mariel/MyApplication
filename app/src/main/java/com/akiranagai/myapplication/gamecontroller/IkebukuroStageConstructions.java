@@ -40,6 +40,17 @@ public class IkebukuroStageConstructions extends StageConstructions {
         int pictureID11 = new Texture().addTexture(context, R.drawable.ikek); //テクスチャを作成
         int pictureID12 = new Texture().addTexture(context, R.drawable.ikel); //テクスチャを作成
         int pictureID13 = new Texture().addTexture(context, R.drawable.ikem); //テクスチャを作成
+        int pictureID14 = new Texture().addTexture(context, R.drawable.ikeo); //テクスチャを作成
+        int pictureID18 = new Texture().addTexture(context, R.drawable.ikep); //テクスチャを作成
+        int pictureID16 = new Texture().addTexture(context, R.drawable.ikeq); //テクスチャを作成
+        int pictureID17 = new Texture().addTexture(context, R.drawable.iker); //テクスチャを作成
+        int pictureID19 = new Texture().addTexture(context, R.drawable.ikes); //テクスチャを作成
+        int pictureID20 = new Texture().addTexture(context, R.drawable.iket); //テクスチャを作成
+        int pictureID21 = new Texture().addTexture(context, R.drawable.ikeu); //テクスチャを作成
+        int pictureID22 = new Texture().addTexture(context, R.drawable.ikev); //テクスチャを作成
+
+        int fence2PictureID = new Texture().addTexture(context, R.drawable.fenceb);  //   フェンステクスチャ2
+
         int moguID1 = new Texture().addTexture(context, R.drawable.sunobonekomini); //テクスチャを作成
         int pictureID15 = new Texture().addTexture(context, R.drawable.fireworksa); //テクスチャを作成
 
@@ -125,18 +136,18 @@ public class IkebukuroStageConstructions extends StageConstructions {
         objectList.add(bill6);
 
         //正面 奥ビル
-        TexObject3D rightFence2 = new TexObject3D();
-        rightFence2.setModel(billShape);
-        rightFence2.setTexture(pictureID7);
+        TexObject3D bill = new TexObject3D();
+        bill.setModel(billShape);
+        bill.setTexture(pictureID7);
         float[] matrix = new float[16];
         Matrix.setIdentityM(matrix,0);
         Matrix.rotateM(matrix, 0, 90,0,1,0);
         Matrix.rotateM(matrix, 0, -90, 0,0,1);
         Matrix.translateM(matrix, 0, -2f, -48f, 0f);
         Matrix.scaleM(matrix, 0, 3f,1f,3f);
-        rightFence2.calcBoundingShapeByMatrix(matrix);
-        rightFence2.setShader(GLES.SP_SimpleTexture);
-        objectList.add(rightFence2);
+        bill.calcBoundingShapeByMatrix(matrix);
+        bill.setShader(GLES.SP_SimpleTexture);
+        objectList.add(bill);
 
         //正面 奥ビル右
         TexObject3D bill7 = new TexObject3D();
@@ -166,6 +177,20 @@ public class IkebukuroStageConstructions extends StageConstructions {
         bill8.setShader(GLES.SP_SimpleTexture);
         objectList.add(bill8);
 
+        //正面 奥ビル左左
+        TexObject3D bill21 = new TexObject3D();
+        bill21.setModel(billShape);
+        bill21.setTexture(pictureID21);
+        matrix = new float[16];
+        Matrix.setIdentityM(matrix,0);
+        Matrix.rotateM(matrix, 0, 90,0,1,0);
+        Matrix.rotateM(matrix, 0, -90, 0,0,1);
+        Matrix.translateM(matrix, 0, -2f, -48f, 22f);
+        Matrix.scaleM(matrix, 0, 3f,1f,2f);
+        bill21.calcBoundingShapeByMatrix(matrix);
+        bill21.setShader(GLES.SP_SimpleTexture);
+        objectList.add(bill21);
+
         // 裏　奥ビル右
         TexObject3D bill9 = new TexObject3D();
         bill9.setModel(billShape);
@@ -180,7 +205,7 @@ public class IkebukuroStageConstructions extends StageConstructions {
         bill9.setShader(GLES.SP_SimpleTexture);
         objectList.add(bill9);
 
-        // 裏　奥ビル左
+        // 裏　奥ビル左 甲子園
         TexObject3D bill10 = new TexObject3D();
         bill10.setModel(billShape);
         bill10.setTexture(pictureID11);
@@ -194,18 +219,84 @@ public class IkebukuroStageConstructions extends StageConstructions {
         bill10.setShader(GLES.SP_SimpleTexture);
         objectList.add(bill10);
 
+        //
+        TexObject3D bill20 = new TexObject3D();
+        bill20.setModel(billShape);
+        bill20.setTexture(pictureID19);
+        matrix = new float[16];
+        Matrix.setIdentityM(matrix,0);
+        Matrix.rotateM(matrix, 0, -90,0,1,0);
+        Matrix.rotateM(matrix, 0, -90, 0,0,1);
+        Matrix.translateM(matrix, 0, -2f, -7f, -22f);
+        Matrix.scaleM(matrix, 0, 3f,2f,2f);
+        bill20.calcBoundingShapeByMatrix(matrix);
+        bill20.setShader(GLES.SP_SimpleTexture);
+        objectList.add(bill20);
+
+        //手前 左奥広場 ビル　パネル Y-mobile
+        TexObject3D eki0 = new TexObject3D();
+        eki0.setModel(billShape);
+        //Texture.setRepeartTexture(ekiwall, true);
+        eki0.setTexture(pictureID10);
+        eki0.setTranslate(0f, -26f, -3f);
+        eki0.setScale(2f,1f,2.f);
+        eki0.setRotate(90, 0,0,1);
+        eki0.fullCalcBoundingShape();
+        eki0.makeMatrix();
+        eki0.setShader(GLES.SP_SimpleTexture);
+        objectList.add(eki0);
+
+        //手前 左奥広場 ビル　パネル 階段ビル
+        TexObject3D eki3 = new TexObject3D();
+        eki3.setModel(billShape);
+        //Texture.setRepeartTexture(ekiwall, true);
+        eki3.setTexture(pictureID17);
+        eki3.setTranslate(0f, -26f, 5f);
+        eki3.setScale(2f,1f,2.f);
+        eki3.setRotate(90, 0,0,1);
+        eki3.fullCalcBoundingShape();
+        eki3.makeMatrix();
+        eki3.setShader(GLES.SP_SimpleTexture);
+        objectList.add(eki3);
+
+        //手前 左奥広場 ビル　パネル SEIBU
+        TexObject3D eki4 = new TexObject3D();
+        eki4.setModel(billShape);
+        //Texture.setRepeartTexture(ekiwall, true);
+        eki4.setTexture(pictureID20);
+        eki4.setTranslate(0f, -26f, 15f);
+        eki4.setScale(2f,1f,3.f);
+        eki4.setRotate(90, 0,0,1);
+        eki4.fullCalcBoundingShape();
+        eki4.makeMatrix();
+        eki4.setShader(GLES.SP_SimpleTexture);
+        objectList.add(eki4);
+
         //手前 左奥広場 ビル　パネル
         TexObject3D eki = new TexObject3D();
         eki.setModel(billShape);
         //Texture.setRepeartTexture(ekiwall, true);
         eki.setTexture(pictureID12);
-        eki.setTranslate(0f, -26f, 30f);
+        eki.setTranslate(0f, -26f, 28f);
         eki.setScale(2f,1f,3.5f);
         eki.setRotate(90, 0,0,1);
         eki.fullCalcBoundingShape();
         eki.makeMatrix();
         eki.setShader(GLES.SP_SimpleTexture);
         objectList.add(eki);
+
+        //手前 左奥広場 ビル　パネル bigcamera
+        TexObject3D eki2 = new TexObject3D();
+        eki2.setModel(billShape);
+        //Texture.setRepeartTexture(ekiwall, true);
+        eki2.setTexture(pictureID14);
+        eki2.setTranslate(0f, -26f, 42f);
+        eki2.setScale(2f,1f,3.5f);
+        eki2.setRotate(90, 0,0,1);
+        eki2.fullCalcBoundingShape();
+        eki2.makeMatrix();
+        eki2.setShader(GLES.SP_SimpleTexture);
+        objectList.add(eki2);
 
         //センターロード　下部パネル(roadModel 縦長)
         TexObject3D road = new TexObject3D();
@@ -219,7 +310,6 @@ public class IkebukuroStageConstructions extends StageConstructions {
         road.setShader(GLES.SP_SimpleTexture);
         objectList.add(road);
 
-
         //手前 右奥広場 ビル1　パネル 4つ谷
         TexObject3D bill14 = new TexObject3D();
         bill14.setModel(billShape);
@@ -232,6 +322,60 @@ public class IkebukuroStageConstructions extends StageConstructions {
         bill14.makeMatrix();
         bill14.setShader(GLES.SP_SimpleTexture);
         objectList.add(bill14);
+
+        //手前 右奥広場 ビル2　パネル
+        TexObject3D bill15 = new TexObject3D();
+        bill15.setModel(billShape);
+        //Texture.setRepeartTexture(bill14wall, true);
+        bill15.setTexture(pictureID16);
+        bill15.setTranslate(-2f, -18f, 32.6f);
+        bill15.setScale(3f,1f,2.5f);
+        bill15.setRotate(-90, 0,0,1);
+        bill15.fullCalcBoundingShape();
+        bill15.makeMatrix();
+        bill15.setShader(GLES.SP_SimpleTexture);
+        objectList.add(bill15);
+
+        //手前 右奥広場 ビル3　パネル 歯科
+        TexObject3D bill16 = new TexObject3D();
+        bill16.setModel(billShape);
+        //Texture.setRepeartTexture(bill14wall, true);
+        bill16.setTexture(pictureID18);
+        bill16.setTranslate(-2f, -18f, 43f);
+        bill16.setScale(3f,1f,2.7f);
+        bill16.setRotate(-90, 0,0,1);
+        bill16.fullCalcBoundingShape();
+        bill16.makeMatrix();
+        bill16.setShader(GLES.SP_SimpleTexture);
+        objectList.add(bill16);
+
+        //右　広場フェンス
+        TexObject3D rightFence1 = new TexObject3D();
+        int fenceObjectShape = new TilePanelShapeGenerator().createShape3D(0, 1.5f, 6, 0, 12,1);
+        rightFence1.setModel(fenceObjectShape);
+        Texture.setRepeartTexture(fence2PictureID, true);
+        rightFence1.setTexture(fence2PictureID);
+        rightFence1.setTranslate(3.2f, -18.1f, 14f);
+        rightFence1.setScale(1f,1f,5f);
+        rightFence1.setRotate(-90, 0,0,1);
+        rightFence1.fullCalcBoundingShape();
+        //rightFence.makeMatrix();
+        rightFence1.setShader(GLES.SP_SimpleTexture);
+        objectList.add(rightFence1);
+
+        // 裏
+        TexObject3D bill22 = new TexObject3D();
+        bill22.setModel(billShape);
+        bill22.setTexture(pictureID22);
+        matrix = new float[16];
+        Matrix.setIdentityM(matrix,0);
+        Matrix.rotateM(matrix, 0, -90,0,1,0);
+        Matrix.rotateM(matrix, 0, -90, 0,0,1);
+        Matrix.translateM(matrix, 0, -2f, -31f, 0f);
+        Matrix.scaleM(matrix, 0, 3f,2f,3.4f);
+        bill22.calcBoundingShapeByMatrix(matrix);
+        bill22.setShader(GLES.SP_SimpleTexture);
+        objectList.add(bill22);
 
         //右 中景1パネル　花火
         TexObject3D backPanel1 = new TexObject3D();
@@ -263,32 +407,30 @@ public class IkebukuroStageConstructions extends StageConstructions {
         //キー入力パネル
         KeyPanelSet kps = new KeyPanelSet();
         final float y = -3.5f;
-        final float x1 = -30;
-        final float x2 = -25;
         float[] keyPositionArray = new float[]{
-                x1, 2, -38,  //0A
-                25, -1, -6,
-                -40, y, 34,
-                x1, 1, 16,
-                -35, -3.2f, -50,  //E
-                -38, -2, 20,  //5
-                -45, -3.5f, -22,
-                x1,-3.4f,39,  //H
-                31,1,-36,
-                10,-2,-42,  //J
-                x2, y, 10,  //10K
-                -38, 0, -5,  //L
+                3, 2, -28,  //0A
+                5, -1, -6,
+                -16, y, 34,
+                3, 1, 16,
+                -5, -3.2f, -20,  //E
+                -18, -2, 20,  //5
+                -5, -3.5f, -22,
+                9,-3.4f,19,  //H
+                4,1,-26,
+                3,-2,-22,  //J
+                -5, y, 10,  //10K
+                -16, 0, -5,  //L
                 -5, y, -3,  //12M
-                32, y, -18,
+                6, y, -18,
                 12, -3.5f, 3f,  //O
-                31, 10, 8,  //P
+                1, 10, 8,  //P
                 20, 0.5f, 36,  //Q
                 18,3,24,  //17R
                 5,y,26,  //S
-                x2,y,28,  //T
+                -16,y,28,  //T
         };
 
-        kps.setPanelShapeID(new TexCubeShapeGenerator().createShape3D(0, 0.8f));
+        kps.setPanelShapeID(new TexCubeShapeGenerator().createShape3D(0, 1.2f));
         kps.setForeColor(Color.rgb(255,0,0));
         kps.setBackColor(Color.rgb(255,255,180));
         kps.createAlphabets(0, 19, keyPositionArray);
@@ -309,6 +451,7 @@ public class IkebukuroStageConstructions extends StageConstructions {
         questionObject.fullCalcBoundingShape();
         //questionObject.makeMatrix();
         questionObject.setShader(GLES.SP_ObjectWithLight2);
+
     }
 
     @Override

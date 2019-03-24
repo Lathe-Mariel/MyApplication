@@ -44,6 +44,7 @@ public class GameManager {
     static int answerAlphabet = -1;  //ゲームの答えのアルファベット
 
     private long startTime, progress_time;
+    private int endTime = 60000;
 
     boolean alwaysDrawCross;
 
@@ -139,8 +140,9 @@ public class GameManager {
         //  }).start();
     }
 
-    private GLStageRenderer generateStageFactors(int stageNumber) {
+    private void generateStageFactors(int stageNumber) {
         if (stageNumber == 0) {
+            endTime = 600000;
             stageConstructions = new ExplainStageConstructions(this);
         } else if (stageNumber == 1) {
             readObjectFromFile("stagea.txt");
@@ -162,12 +164,18 @@ public class GameManager {
 
         }
         field.putAllObjects(stageConstructions.getObjectList());
-        return null;
+        return;
     }
 
     public void correctAnswer(){
         score += 100;
-        renderer.putToast(CLEAR_ID, 1500);
+        surfaceView.queueEvent(new Runnable() {
+            @Override
+            public void run() {
+                renderer.putToast(CLEAR_ID, 1500);
+            }
+        });
+
         new Thread(){
             public void run() {
                 try {
@@ -221,8 +229,8 @@ public class GameManager {
     public String getCurrentTime(){
         String time;
         progress_time = System.currentTimeMillis() - startTime;
-        if(progress_time > 60000) {
-            time = formatter.format(60000) + "    Score: " + score;
+        if(progress_time > endTime) {
+            time = formatter.format(endTime) + "    Score: " + score;
             try{
                 Thread.sleep(100);
             }catch(Exception e){e.printStackTrace();}

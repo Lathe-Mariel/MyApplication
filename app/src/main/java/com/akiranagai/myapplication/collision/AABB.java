@@ -101,8 +101,9 @@ public class AABB extends BoundingShape{
                 v2[i] = v2[i] + returnVector.get(i);
             }
             if(object instanceof Premadonna){
-                ((Premadonna)object).crash(-(distance*4)*(distance*4));
+                ((Premadonna)object).crash(-(distance*8)*(distance*8));
             }
+
             object.setTranslate(v2[0], v2[1],v2[2]);
         }
     }
