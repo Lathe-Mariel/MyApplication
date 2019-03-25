@@ -97,7 +97,7 @@ public class KeyPanelSet {
     public static boolean tapKeyPanel(int alphabetNumber) {
         if(alphabetNumber < 0)return false;
         //singleCubePanelの場合
-        if(alphabetNumber < keyPanelList.size()) {
+        if(alphabetNumber < keyPanelList.size()-1) {
             TexObject3D object;
             if (selectedKeyPanel != -1) {
                 object = keyPanelList.get(selectedKeyPanel);
@@ -115,7 +115,7 @@ public class KeyPanelSet {
             return false;
         }
         //6面体の場合
-        if(alphabetNumber >= keyPanelList.size() && alphabetNumber < 26){
+        if(alphabetNumber >= keyPanelList.size()-1 && alphabetNumber < 26){
             int selectedNumber = alphabetNumber -(keyPanelList.size()-1);
             Log.d("message", "key6Panel number: " + selectedNumber);
 

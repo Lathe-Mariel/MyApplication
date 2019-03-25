@@ -6,6 +6,7 @@ import android.graphics.Color;
 import com.akiranagai.myapplication.GLES;
 import com.akiranagai.myapplication.R;
 import com.akiranagai.myapplication.Texture;
+import com.akiranagai.myapplication.object3d.ArrayObject3D;
 import com.akiranagai.myapplication.object3d.KeyPanelSet;
 import com.akiranagai.myapplication.object3d.Object3D;
 import com.akiranagai.myapplication.object3d.StlModel;
@@ -13,6 +14,7 @@ import com.akiranagai.myapplication.object3d.Tex4PanelShapeGenerator;
 import com.akiranagai.myapplication.object3d.TexCubeShapeGenerator;
 import com.akiranagai.myapplication.object3d.TexObject3D;
 import com.akiranagai.myapplication.object3d.TilePanelShapeGenerator;
+import com.akiranagai.myapplication.object3d.TriangleShapeGenerator;
 
 import java.util.ArrayList;
 
@@ -20,6 +22,8 @@ public class ShrineStageConstructions extends StageConstructions {
 
     public ShrineStageConstructions(GameManager manager){
         Context context = manager.activity.getBaseContext();
+
+        manager.renderer.setBackTexture(new Texture().addTexture(context, R.drawable.ikesora));  //背景
 
         int back1 = new Texture().addTexture(context, R.drawable.shrinea);  //   八坂神社
         int fence2PictureID = new Texture().addTexture(context, R.drawable.wish);  //   フェンステクスチャ2
@@ -68,6 +72,14 @@ public class ShrineStageConstructions extends StageConstructions {
         waku.makeMatrix();
         waku.setShader(GLES.SP_SimpleTexture);
         objectList.add(waku);
+
+        //吹雪
+        Object3D sakuraBlizzard = new ArrayObject3D(20,20);
+        sakuraBlizzard.setModel(new TriangleShapeGenerator().createShape3D(0));
+        sakuraBlizzard.setTranslate(5,1f,0);
+        sakuraBlizzard.setColor(1,0.7f,0.7f, 1f);
+        sakuraBlizzard.setShader(GLES.SP_Blizzard);
+        objectList.add(sakuraBlizzard);
 
         //キー入力パネル
         KeyPanelSet kps = new KeyPanelSet();

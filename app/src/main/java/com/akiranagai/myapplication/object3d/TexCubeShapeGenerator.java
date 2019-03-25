@@ -147,8 +147,8 @@ public class TexCubeShapeGenerator extends CreatableShape {
     final float textcoords6[] = {
             0.125f,1f, //face 0
             0.125f,0f,
-            0f,0f,
             0f,1f,
+            0f,0f,
 
             0.25f,0f, //face 1
             0.125f,0f,
@@ -181,6 +181,11 @@ public class TexCubeShapeGenerator extends CreatableShape {
         texturecoord = textcoords0;
     }
 
+    /**
+     * textcoordsを切り替える.
+     * mode=6: 6面別々のテキスチャー(6要素を持つ,1枚のテキスチャーを６面に貼り付け)
+     * @param mode
+     */
     public void setTextureMode(int mode){
         this.mode = mode;
 

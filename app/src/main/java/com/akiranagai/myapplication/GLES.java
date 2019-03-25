@@ -94,6 +94,59 @@ public class GLES {
                     "gl_FragColor = u_ObjectColor;"+
                     "}";
 
+    //*******************************************************************
+    //********************************************************************
+
+    //点　（Blizzard)
+    //頂点シェーダのコード
+    private final static String SP_Blizzard_VSCODE =
+            "precision mediump float;" +
+                    "uniform int u_Time;"+
+                    //"uniform vec4 u_ObjectColor;" +
+
+                    "varying vec4 v_Color;" +
+
+                    //行列
+                    "uniform mat4 u_PMMatrix;" +       //射影行列×モデルビュー行列
+                    "uniform mat4 u_MMatrix;" +
+                    "uniform mat4 matrix;" +
+
+                    //頂点情報
+                    "attribute vec4 a_Position;" +  //位置
+                    "float pos_y;" +
+                    "float pos_x;" +
+                    "float time;" +
+                    "vec4 calc;" +
+                    "vec4 posi;" +
+
+                    "void main() {" +
+
+                    "time = float(u_Time);" +
+                    "calc = a_Position;" +
+                    "posi = a_Position * matrix;" +
+                    //位置の指定
+
+                    "pos_y = time * (-0.02 -abs(posi.x)/64.0);" +
+                    "calc.y += pos_y;" +
+                    "pos_x = time*time/8192.0;" +
+                    "calc.x += pos_x + sin(time/16.0)/8.0+cos(time)/128.0;" +
+
+                    "gl_Position=u_PMMatrix*calc;" +
+
+                    "v_Color = vec4(1.0, 0.85,0.85,1.0);" +
+                    "}";
+    //フラグメントシェーダのコード
+    private final static String SP_Blizzard_FSCODE =
+            "precision mediump float;" +
+                    "varying vec4 v_Color;" +
+
+                    "void main() {" +
+                    //"gl_FragColor.r = 1;" +
+                    "gl_FragColor = v_Color;"+
+                    "}";
+
+    //********************************************************************
+
     //********************************************************************
     //照明なしのときの描画　（線画にも使える）
     //頂点毎に色情報を持っている
@@ -650,10 +703,12 @@ public class GLES {
     public static int SP_PointSprite;             //照明なし，テクスチャなし，ポイントスプライトのシェーダプログラム
     public static int SP_ObjectWithLight2;
     public static int SP_SimpleTextureSimpleZ;
+    public static int SP_Blizzard;
 
     //システム
     public static int objectColorHandle;   //shadingを行わない時に使う単色ハンドル
     public static int pointSizeHandle;     //ポイントブラー時に使うpointsizeハンドル
+    public static int timeHandle;
 
     //ZBuffer値を対数拡張するための定数
     public static int AAHandle; //nearのハンドル
@@ -684,6 +739,8 @@ public class GLES {
     public static int mMatrixHandle;     //モデルビュー行列ハンドル（カメラビュー行列×モデル変換行列）
     public static int pmMatrixHandle;     //(射影行列×モデルビュー行列)ハンドル
 
+    public static int matrixHandle;    //ブリザード用
+
     //頂点のハンドル
     public static int positionHandle;//位置ハンドル
     public static int normalHandle;  //法線ハンドル
@@ -709,6 +766,8 @@ public class GLES {
     public static float[] mMatrix = new float[16];//モデルビュー行列
     public static float[] pMatrix = new float[16];//射影行列
     public static float[] pmMatrix = new float[16];//射影行列 pMatrix*mMatrix
+
+    public static float[] matrix = new float[16];//ブリザード用
 
     //光源
     private static float[] LightPos = new float[4];    //光源の座標　x,y,z　（ワールド座標）
@@ -763,6 +822,9 @@ public class GLES {
         SP_SimpleTextureSimpleZ = makeProgram0(SimpleTextureSimpleZ_VSCODE, SimpleTextureSimpleZ_FSCODE);
         programNumber.put("SP_SimpleTextureSimpleZ", SP_SimpleTextureSimpleZ);
         if (SP_SimpleTextureSimpleZ == INVALID) return false;
+        SP_Blizzard = makeProgram0(SP_Blizzard_VSCODE, SP_Blizzard_FSCODE);
+        programNumber.put("SP_Blizzard", SP_Blizzard);
+        if (SP_Blizzard == INVALID) return false;
         created = true;
         return true;
     }
@@ -892,6 +954,12 @@ public class GLES {
             pointSizeHandle = GLES20.glGetUniformLocation(programID, "u_PointSize");
             objectColorHandle = GLES20.glGetUniformLocation(programID, "u_ObjectColor");
             useLighting = false;
+        } else if (programID == SP_Blizzard) {
+            GLES20.glUseProgram(programID);
+            //光源を使わない時のマテリアルの色のハンドルの取得
+            timeHandle = GLES20.glGetUniformLocation(programID, "u_Time");
+            matrixHandle = GLES20.glGetUniformLocation(programID, "matrix");
+            useLighting = false;
         } else if (programID == SP_TextureWithLight_Obstacle) {
             GLES20.glUseProgram(programID);
             //光源のハンドルの取得
@@ -963,6 +1031,8 @@ public class GLES {
         } else if (currentProgram == SP_SimpleObjectVTXColor) {
             GLES20.glDisableVertexAttribArray(colorHandle);
         } else if (currentProgram == SP_PointBlur) {
+        } else if(currentProgram == SP_Blizzard){
+            GLES20.glDisableVertexAttribArray(matrixHandle);
         } else if (currentProgram == SP_PointSprite) {
         } else {
             return;
@@ -1074,6 +1144,19 @@ public class GLES {
     //カメラ視点変換行列をシェーダに指定
     public static void setCMatrix(float[] cm) {
         System.arraycopy(cm, 0, cMatrix, 0, 16);
+    }
+
+    public static void updateMatrix2(float[] mm){
+        Matrix.multiplyMM(mMatrix, 0, cMatrix, 0, mm, 0);       //mMatrix = cMatrix * mm
+        Matrix.multiplyMM(pmMatrix, 0, pMatrix, 0, mMatrix, 0); //pmMatrix = pMatrix * mMatrix
+
+        GLES20.glUniformMatrix4fv(matrixHandle, 1, false, mm, 0);
+        //モデルビュー行列をシェーダに指定
+        GLES20.glUniformMatrix4fv(mMatrixHandle, 1, false, mMatrix, 0);
+
+        //プロジェクション行列（射影行列）×モデルビュー行列をシェーダに指定
+        GLES20.glUniformMatrix4fv(pmMatrixHandle, 1, false, pmMatrix, 0);
+
     }
 
     //カメラ視点変換行列×モデルビュー行列をシェーダに指定

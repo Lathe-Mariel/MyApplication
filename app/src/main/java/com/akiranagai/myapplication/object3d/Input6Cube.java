@@ -6,15 +6,26 @@ import android.opengl.Matrix;
 import com.akiranagai.myapplication.GLES;
 import com.akiranagai.myapplication.Texture;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class Input6Cube extends TexObject3D {
     private int backTextureID = 0;
     private TexObject3D innerObject3D;
     private final float INNER_BIG = 0.95f;  //インナーオブジェクト選択時のサイズ（アウターに対する割合 3軸共通)
+    private Timer spinTimer;
 
     public Input6Cube(){
         super();
         innerObject3D = new TexObject3D();
         innerObject3D.setColor(0.2f,0.2f,0.5f, 0.2f);
+
+        spinTimer = new Timer();  //自転タイマー
+        spinTimer.schedule(new TimerTask(){
+            public void run(){
+                spinX(2.0f);
+            }
+        }, 2000, 100);
     }
 
     public Input6Cube setBackTexture(int textureID){
@@ -42,7 +53,7 @@ public class Input6Cube extends TexObject3D {
 
     public Input6Cube setScale(float x, float y, float z){
         super.setScale(x, y, z);
-        innerObject3D.setScale(x*0.1f, y*0.1f, z*0.1f);
+        innerObject3D.setScale(x*0.12f, y*0.12f, z*0.12f);
         return this;
     }
 
@@ -56,6 +67,13 @@ public class Input6Cube extends TexObject3D {
     public void makeMatrix(){
         super.makeMatrix();
         innerObject3D.makeMatrix();
+    }
+
+    public synchronized void spinX(float value){
+        Matrix.rotateM(mMatrix, 0, value, 1,0,0);
+        Matrix.translateM(innerObject3D.mMatrix, 0, -movedDirection[0], -movedDirection[1], -movedDirection[2]);
+        Matrix.rotateM(innerObject3D.mMatrix, 0, value, 1,0,0);
+        Matrix.translateM(innerObject3D.mMatrix, 0, movedDirection[0], movedDirection[1], movedDirection[2]);
     }
 
     @Override
@@ -81,6 +99,8 @@ public class Input6Cube extends TexObject3D {
         }
     }
 
+    float[] movedDirection = new float[3];
+    boolean isBig;
     /**
      * inner オブジェクトを選択した面方向へ移動
      * @param faceNumber
@@ -117,13 +137,24 @@ public class Input6Cube extends TexObject3D {
             shape.normalBuffer.position(realNumber * 4);
             shape.normalBuffer.get(direction, 0, 3);
             for (int i = 0; i < 3; i++) {
-                direction[i] *= 0.1f;
+                direction[i] *= 0.08f;
             }
-            innerObject3D.setScale(INNER_BIG,INNER_BIG,INNER_BIG);
+            //Matrix.scaleM(innerObject3D.mMatrix, 0, INNER_BIG, INNER_BIG, INNER_BIG);
+            if(!isBig) {
+                Matrix.scaleM(innerObject3D.mMatrix, 0, 8, 8, 8);
+                isBig =true;
+            }
+//            innerObject3D.setScale(INNER_BIG,INNER_BIG,INNER_BIG);
         }else{
-            innerObject3D.setScale(0.1f,0.1f,0.1f);
+            Matrix.scaleM(innerObject3D.mMatrix, 0, 0.125f, 0.125f, 0.125f);
+            //innerObject3D.setScale(0.125f,0.125f,0.125f);
+            isBig = false;
         }
-        innerObject3D.setTranslate(translateValues[0]+direction[0], translateValues[1] + direction[1], translateValues[2] + direction[2]);
-        innerObject3D.makeMatrix();
+        //innerObject3D.setTranslate(translateValues[0]+direction[0], translateValues[1] + direction[1], translateValues[2] + direction[2]);
+        //innerObject3D.makeMatrix();
+        synchronized (this) {
+            Matrix.translateM(innerObject3D.mMatrix, 0, direction[0] - movedDirection[0], direction[1] - movedDirection[1], direction[2] - movedDirection[2]);
+            movedDirection = direction;
+        }
     }
 }

@@ -191,7 +191,7 @@ public class IkebukuroStageConstructions extends StageConstructions {
         bill21.setShader(GLES.SP_SimpleTexture);
         objectList.add(bill21);
 
-        // 裏　奥ビル右
+        // 裏　奥ビル右 王将
         TexObject3D bill9 = new TexObject3D();
         bill9.setModel(billShape);
         bill9.setTexture(pictureID13);
@@ -204,6 +204,20 @@ public class IkebukuroStageConstructions extends StageConstructions {
         bill9.calcBoundingShapeByMatrix(matrix);
         bill9.setShader(GLES.SP_SimpleTexture);
         objectList.add(bill9);
+
+        //90度<前　Y+ 右Z+>
+        TexObject3D bill24 = new TexObject3D();
+        bill24.setModel(billShape);
+        bill24.setTexture(pictureID13);
+        matrix = new float[16];
+        Matrix.setIdentityM(matrix,0);
+        Matrix.rotateM(matrix, 0, -90,0,1,0);
+        Matrix.rotateM(matrix, 0, -90, 0,0,1);
+        Matrix.translateM(matrix, 0, -2f, -1f, 24f);
+        Matrix.scaleM(matrix, 0, 3f,2f,3f);
+        bill24.calcBoundingShapeByMatrix(matrix);
+        bill24.setShader(GLES.SP_SimpleTexture);
+        objectList.add(bill24);
 
         // 裏　奥ビル左 甲子園
         TexObject3D bill10 = new TexObject3D();
@@ -285,13 +299,13 @@ public class IkebukuroStageConstructions extends StageConstructions {
         eki.setShader(GLES.SP_SimpleTexture);
         objectList.add(eki);
 
-        //手前 左奥広場 ビル　パネル bigcamera
+        //手前 左奥広場 ビル　パネル bigcamera大<上がX+>
         TexObject3D eki2 = new TexObject3D();
         eki2.setModel(billShape);
         //Texture.setRepeartTexture(ekiwall, true);
         eki2.setTexture(pictureID14);
-        eki2.setTranslate(0f, -26f, 42f);
-        eki2.setScale(2f,1f,3.5f);
+        eki2.setTranslate(1.8f, -26f, 42f);
+        eki2.setScale(2.8f,1f,3.5f);
         eki2.setRotate(90, 0,0,1);
         eki2.fullCalcBoundingShape();
         eki2.makeMatrix();
@@ -310,12 +324,12 @@ public class IkebukuroStageConstructions extends StageConstructions {
         road.setShader(GLES.SP_SimpleTexture);
         objectList.add(road);
 
-        //手前 右奥広場 ビル1　パネル 4つ谷
+        //手前 右奥広場 ビル1　パネル 4つ谷2<上 X->
         TexObject3D bill14 = new TexObject3D();
         bill14.setModel(billShape);
         //Texture.setRepeartTexture(bill14wall, true);
         bill14.setTexture(pictureID6);
-        bill14.setTranslate(-1.85f, -18f, -4f);
+        bill14.setTranslate(-1.6f, -18f, -4f);
         bill14.setScale(2.8f,1f,1.5f);
         bill14.setRotate(-90, 0,0,1);
         bill14.fullCalcBoundingShape();
@@ -323,7 +337,7 @@ public class IkebukuroStageConstructions extends StageConstructions {
         bill14.setShader(GLES.SP_SimpleTexture);
         objectList.add(bill14);
 
-        //手前 右奥広場 ビル2　パネル
+        //手前 右奥広場 ビル2　パネル　オフィス
         TexObject3D bill15 = new TexObject3D();
         bill15.setModel(billShape);
         //Texture.setRepeartTexture(bill14wall, true);
@@ -348,6 +362,20 @@ public class IkebukuroStageConstructions extends StageConstructions {
         bill16.makeMatrix();
         bill16.setShader(GLES.SP_SimpleTexture);
         objectList.add(bill16);
+
+        //広場　右奥ビル オフィス９０度
+        TexObject3D bill23 = new TexObject3D();
+        bill23.setModel(billShape);
+        bill23.setTexture(pictureID16);
+        matrix = new float[16];
+        Matrix.setIdentityM(matrix,0);
+        Matrix.rotateM(matrix, 0, 90,0,1,0);
+        Matrix.rotateM(matrix, 0, -90, 0,0,1);
+        Matrix.translateM(matrix, 0, -2f, -28f, -24f);
+        Matrix.scaleM(matrix, 0, 3f,1f,3f);
+        bill23.calcBoundingShapeByMatrix(matrix);
+        bill23.setShader(GLES.SP_SimpleTexture);
+        objectList.add(bill23);
 
         //右　広場フェンス
         TexObject3D rightFence1 = new TexObject3D();
@@ -406,27 +434,27 @@ public class IkebukuroStageConstructions extends StageConstructions {
 
         //キー入力パネル
         KeyPanelSet kps = new KeyPanelSet();
-        final float y = -3.5f;
+        final float y = -3.4f;
         float[] keyPositionArray = new float[]{
                 3, 2, -28,  //0A
-                5, -1, -6,
+                5, -3.5f, 39,
                 -16, y, 34,
                 3, 1, 16,
                 -5, -3.2f, -20,  //E
                 -18, -2, 20,  //5
-                -5, -3.5f, -22,
-                9,-3.4f,19,  //H
-                4,1,-26,
-                3,-2,-22,  //J
+                -27, 7f, 32,
+                19,-4.65f,19,  //H
+                -18,7,0,
+                30,9,40,  //J
                 -5, y, 10,  //10K
                 -16, 0, -5,  //L
                 -5, y, -3,  //12M
-                6, y, -18,
-                12, -3.5f, 3f,  //O
+                6.5f, y, -18,
+                12, -3.3f, 3f,  //O
                 1, 10, 8,  //P
                 20, 0.5f, 36,  //Q
                 18,3,24,  //17R
-                5,y,26,  //S
+                30,6,26,  //S
                 -16,y,28,  //T
         };
 
