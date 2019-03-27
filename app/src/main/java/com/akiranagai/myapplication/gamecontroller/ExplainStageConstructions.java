@@ -279,7 +279,8 @@ public class ExplainStageConstructions extends StageConstructions {
 
                 //}
             //});
-            new MessageTextureGenerator2().start();
+            MessageTextureGenerator2 mtg2 = new MessageTextureGenerator2();
+            mtg2.start();
 
             try{
                 Thread.sleep(8000);
@@ -458,12 +459,8 @@ public class ExplainStageConstructions extends StageConstructions {
                     synchronized (this) {
                         manager.surfaceView.queueEvent(new Runnable() {
                             public void run() {
-                                //StringTextureGenerator.deleteTexture(textureID);
                                synchronized (MessageTextureGenerator.this) {
-                                  //  StringTextureGenerator stg = new StringTextureGenerator();
-                                    //stg.setAlfa(200, 0);
                                     textureID = stg.makeStringTexture2(message, 50, Color.parseColor("#006666FF"), Color.parseColor("#00FFFFFF"));
-                                    //MessageTextureGenerator.this.notify();
                                    renderer.putToast2(textureID, interval[counta]);
                                 }
                             }
@@ -489,6 +486,7 @@ public class ExplainStageConstructions extends StageConstructions {
     class MessageTextureGenerator2 extends Thread{
         String[] messages;
         private final int TIME_GAP = 600;
+        private StringTextureGenerator stg;
 
         int textureID = -1;
         int count = 0;
@@ -526,19 +524,17 @@ public class ExplainStageConstructions extends StageConstructions {
         }
 
         public void run(){
+            stg = new StringTextureGenerator();
+            stg.setAlfa(200,0);
             for(int count = 0; count < messages.length; count++) {
                 final String message = messages[count];
                 final int counta = count;
                 synchronized (this) {
                     manager.surfaceView.queueEvent(new Runnable() {
                         public void run() {
-                            StringTextureGenerator.deleteTexture(textureID);
                             synchronized (MessageTextureGenerator2.this) {
-                                StringTextureGenerator stg = new StringTextureGenerator();
-                                stg.setAlfa(200, 0);
                                 textureID = stg.makeStringTexture2(message, 50, Color.parseColor("#006666FF"), Color.parseColor("#00FFFFFF"));
-                                //MessageTextureGenerator2.this.notify();
-                                renderer.putToast2(textureID, counta);
+                                renderer.putToast2(textureID, interval[counta]);
                             }
                         }
                     });

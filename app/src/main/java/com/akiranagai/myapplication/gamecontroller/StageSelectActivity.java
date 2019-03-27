@@ -37,6 +37,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Switch;
 
 import com.akiranagai.myapplication.R;
@@ -68,11 +69,12 @@ public class StageSelectActivity extends AppCompatActivity {
     /**
      * 常時　入力用　十字が画面表示されるか
      */
-    private boolean alwaysDrawCross;
+    private boolean alwaysDrawCross = true;
     /**
      * ゲームループ インターバル値　ゼロモード
      */
     private boolean maxMode;
+    private int renderLoad;
 
 
     private int stage;
@@ -107,6 +109,7 @@ public class StageSelectActivity extends AppCompatActivity {
                 intent.putExtra("STAGE_NUMBER", stageNumber);
                 intent.putExtra("ALWAYS_DRAW_CROSS", alwaysDrawCross);
                 intent.putExtra("MAX_MODE", maxMode);
+                intent.putExtra("RENDER_LOAD", renderLoad);
                 StageSelectActivity.this.startActivityForResult(intent,1);
             }
         });
@@ -259,11 +262,12 @@ public class StageSelectActivity extends AppCompatActivity {
                     messages.add("Play Times: " + score[1]);
                     break;
                 case 2:  //神社夜
-                    messages.add("Difficulty: 11Level");
-                    messages.add("Shrine");
-                    messages.add("Hi Score: " + score[0]);
-                    messages.add("Average: " + score[2]);
-                    messages.add("Play Times: " + score[1]);
+                    messages.add("　Difficulty: 11Level");
+                    messages.add("　Shrine");
+                    messages.add("　Hi Score: " + score[0]);
+                    messages.add("　Average: " + score[2]);
+                    messages.add("　Play Times: " + score[1]);
+                    imageView.setImageResource(R.drawable.stage2);
                     break;
                 case 3:  //アクア
                     messages.add("Difficulty: 250Level");
@@ -289,11 +293,11 @@ public class StageSelectActivity extends AppCompatActivity {
                     imageView.setImageResource(R.drawable.stage5);
                     break;
                 case 6:
-                    messages.add("Difficulty: 700Level");
-                    messages.add("池袋");
-                    messages.add("Hi Score: " + score[0]);
-                    messages.add("Average: " + score[2]);
-                    messages.add("Play Times: " + score[1]);
+                    messages.add("　Difficulty: 700Level");
+                    messages.add("　池袋");
+                    messages.add("　Hi Score: " + score[0]);
+                    messages.add("　Average: " + score[2]);
+                    messages.add("　Play Times: " + score[1]);
                     list[selector].setBackgroundColor(Color.argb(80, 100,150,255));
                     imageView.setImageResource(R.drawable.ike);
                     break;
@@ -336,10 +340,21 @@ public class StageSelectActivity extends AppCompatActivity {
             super.setPrimaryItem(container, position, object);
 
             if(page == position)return;  //setPrimaryItem()はシステムから３回呼び出されるので、２，３回目は何もしない
-            if(page == PAGES){  //設定項目　保存
+            if(page == PAGES-1){  //設定項目　保存
 
                 alwaysDrawCross = ((RadioButton)findViewById(R.id.drawRadio)).isChecked();
                 maxMode = ((Switch)findViewById(R.id.MaxSwitch)).isChecked();
+                RadioGroup rg = findViewById(R.id.levelRadio);
+                int rb = rg.getCheckedRadioButtonId();
+                if(rb == R.id.renderLow){
+                    rb = 0;
+                }else if(rb == R.id.renderMedium){
+                    rb = 1;
+                }else if(rb == R.id.renderHigh){
+                    rb = 2;
+                }
+                //Log.d("messageg", "rb: " + rb);
+                renderLoad = rb;
             }
             final Handler handler = new Handler();
             //前ページのList隠し処理

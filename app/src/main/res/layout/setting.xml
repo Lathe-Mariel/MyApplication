@@ -66,6 +66,42 @@
 
         </RadioGroup>
 
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Render  Load" />
+
+        <RadioGroup
+            android:id="@+id/levelRadio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checkedButton="@+id/levelRadio"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/renderLow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Low" />
+
+            <RadioButton
+                android:id="@+id/renderMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:text="Medium" />
+
+            <RadioButton
+                android:id="@+id/renderHigh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="High" />
+        </RadioGroup>
+
         <Button
             android:id="@+id/clearButton"
             android:layout_width="match_parent"
@@ -77,7 +113,7 @@
             android:id="@+id/MaxSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Maximum Mode" />
+            android:text="Maximum Speed Mode" />
     </LinearLayout>
 
     <LinearLayout

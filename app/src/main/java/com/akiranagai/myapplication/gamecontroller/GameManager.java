@@ -38,13 +38,14 @@ public class GameManager {
     private StageConstructions stageConstructions = null;
     private int score;
     SimpleDateFormat formatter;  //時間表示用
+    int renderLoad;  //ユーザー選択 描画負荷
 
     private StageRoopTimer timer;
     private int currentStage = 1;  //プレイ中の面(ステージ)
     static int answerAlphabet = -1;  //ゲームの答えのアルファベット
 
     private long startTime, progress_time;
-    private int endTime = 60000;
+    private int endTime = 90000;
 
     boolean alwaysDrawCross;
 
@@ -79,7 +80,7 @@ public class GameManager {
 
     void init() {
         sInput.setDrawCrossState(alwaysDrawCross);
-        Log.d("messagee", "ALWAYS_DRAW_CROSS: " + alwaysDrawCross);
+        //Log.d("messagee", "ALWAYS_DRAW_CROSS: " + alwaysDrawCross);
     }
 
     /**

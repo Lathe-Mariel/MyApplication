@@ -102,6 +102,7 @@ public class GLES {
     private final static String SP_Blizzard_VSCODE =
             "precision mediump float;" +
                     "uniform int u_Time;"+
+                    "uniform int u_Number;" +
                     //"uniform vec4 u_ObjectColor;" +
 
                     "varying vec4 v_Color;" +
@@ -111,6 +112,7 @@ public class GLES {
                     "uniform mat4 u_MMatrix;" +
                     "uniform mat4 matrix;" +
 
+
                     //頂点情報
                     "attribute vec4 a_Position;" +  //位置
                     "float pos_y;" +
@@ -118,31 +120,54 @@ public class GLES {
                     "float time;" +
                     "vec4 calc;" +
                     "vec4 posi;" +
+                    "float cyclon;" +
 
                     "void main() {" +
-
-                    "time = float(u_Time);" +
+                    //"time = mod(float(u_Time),200.0);" +
+                    "time = mod(float(u_Time), 520.0)+40.0;"+
                     "calc = a_Position;" +
-                    "posi = a_Position * matrix;" +
+                    "posi = matrix * a_Position;" +
                     //位置の指定
 
-                    "pos_y = time * (-0.02 -abs(posi.x)/64.0);" +
+                    //"pos_y = time * (-0.01 -abs(posi.x)/512.0) - fract(sin(float(u_Number))/64.0) + ceil((time+float(u_Number))/180.)*5.0;" +
+
+                    "cyclon = (max(450.0,time)-450.0)/12.74;" +
+
+                    "pos_y = -time * float(u_Number)/4096.0;" +
+                    "pos_y = mod(pos_y, 6.0);" +
+                    //"cyclon += pow(pos_y, 2.0)/18.0;" +
+                    "pos_y += sin(posi.y*8.0)/16.0;"+
+
+                   // "calc.y += pos_y;" +
+                    //"pos_x = time*time/8192.0;"+
+                    //"pos_x = mod(pos_x, 10.0);"+
+                    "pos_x = time/16.0 * sin(time/100.0) + time * float(u_Number)/4096.0;" +
+                    "pos_x = mod(pos_x, 10.0);" +
+                    //"cyclon += pow(pos_x, 2.0)/50.0;" +
+                    //"calc.x += pos_x;" +
+
+                    "calc.z += cos(posi.x*8.0)/16.0;"+
+                    "pos_y += -2.0* cos(cyclon)*(min(-4.0, pos_y)+4.0);" +
+                    "pos_x += 3.0*sin(cyclon)*(max(7.5, pos_x)-7.5);" +
                     "calc.y += pos_y;" +
-                    "pos_x = time*time/8192.0;" +
-                    "calc.x += pos_x + sin(time/16.0)/8.0+cos(time)/128.0;" +
+                    "calc.x += pos_x;" +
 
                     "gl_Position=u_PMMatrix*calc;" +
 
-                    "v_Color = vec4(1.0, 0.85,0.85,1.0);" +
+                    "v_Color = vec4(1.0, 0.85, 0.9, 1.0);" +
                     "}";
+
     //フラグメントシェーダのコード
     private final static String SP_Blizzard_FSCODE =
             "precision mediump float;" +
                     "varying vec4 v_Color;" +
 
                     "void main() {" +
-                    //"gl_FragColor.r = 1;" +
+                    //"if(abs(gl_FragCoord.y - v_Position.y) > 100.){"+
+                    //"discard;" +
+                    //"}else{" +
                     "gl_FragColor = v_Color;"+
+                    //"}"+
                     "}";
 
     //********************************************************************
@@ -709,6 +734,7 @@ public class GLES {
     public static int objectColorHandle;   //shadingを行わない時に使う単色ハンドル
     public static int pointSizeHandle;     //ポイントブラー時に使うpointsizeハンドル
     public static int timeHandle;
+    public static int numberHandle;
 
     //ZBuffer値を対数拡張するための定数
     public static int AAHandle; //nearのハンドル
@@ -959,6 +985,7 @@ public class GLES {
             //光源を使わない時のマテリアルの色のハンドルの取得
             timeHandle = GLES20.glGetUniformLocation(programID, "u_Time");
             matrixHandle = GLES20.glGetUniformLocation(programID, "matrix");
+            numberHandle = GLES20.glGetUniformLocation(programID, "u_Number");
             useLighting = false;
         } else if (programID == SP_TextureWithLight_Obstacle) {
             GLES20.glUseProgram(programID);

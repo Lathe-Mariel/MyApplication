@@ -17,7 +17,8 @@ GameManager *-- Field3D2
 GameManager *-- GLStageRenderer
 GameManager *-- QuaterSpaceManager
 GameManager *-- ScreenInput
-GamaManager *-- Premadonna
+GameManager *-- Premadonna
+GameManager *-- SQLiteAccess
 interface Field{
 }
 class Field3D extends Field{
@@ -58,6 +59,12 @@ class ScreenInput implements View.onTouchListener, Runnable{
 }
 ScreenInput *-- GestureDetector
 
+class SQLiteAccess extends SQLiteOpenHelper{
+ -String dataBaseName
+ +dataSavae()
+ +getAllNotes()
+}
+
 abstract class StageConstructions{
  ArrayList<Object3D> objectList
 }
@@ -67,9 +74,15 @@ class BritishStageConstructions extends StageConstructions{
 }
 class AqualiumStageConstructions extends StageConstructions{
 }
+class ExplainStageConstructions extends StageConstructions{
+}
+class IkebukuroStageConstructions extends StageConstructions{
+}
 abstract class Premadonna{
 }
 class Cat extends Premadonna{
+}
+class Rabbit extends Premadonna{
 }
 
 abstract class CreatableShape{
@@ -82,6 +95,8 @@ class PipeShapeGenerator extends CreatableShape{
 class TexSphereShapeGenerator extends CreatableShape{
 }
 class InnerHalfSphere extends CreatableShape{
+}
+class TriangleShapeGenerator extends CreatableShape{
 }
 class StlModel extends CreatableShape{
  +makeRandomModel()
@@ -107,11 +122,24 @@ Object3D *-- Shape3D
 class TexObject3D extends Object3D{
 int textureID
 }
+class ArrayObject3D extends Object3D{
+}
 class Input6Cube extends TexObject3D{
 }
 class Texture{
  {static} +HashMap<Integer, Integer> textureList
  +addTexture()
+}
+class BarGraphTextureGenerator{
+ -int barColor
+ -int backColor
+ -int maxValue
+ +refleshBar()
+}
+class BufferUtil{
+ {static} +ShortBuffer makeShortBuffer()
+ {static} +FloatBuffer makeFloatBuffer()
+ {static} +ByteBuffer makeByteBuffer()
 }
 
 abstract class ObjectRail implements Runnable{

@@ -145,10 +145,12 @@ public class Input6Cube extends TexObject3D {
                 isBig =true;
             }
 //            innerObject3D.setScale(INNER_BIG,INNER_BIG,INNER_BIG);
-        }else{
+        }else{  //2回目タップ(決定)
+            Matrix.translateM(innerObject3D.mMatrix, 0, -movedDirection[0], -movedDirection[1], -movedDirection[2]);
             Matrix.scaleM(innerObject3D.mMatrix, 0, 0.125f, 0.125f, 0.125f);
-            //innerObject3D.setScale(0.125f,0.125f,0.125f);
             isBig = false;
+            movedDirection = direction;
+            return;
         }
         //innerObject3D.setTranslate(translateValues[0]+direction[0], translateValues[1] + direction[1], translateValues[2] + direction[2]);
         //innerObject3D.makeMatrix();

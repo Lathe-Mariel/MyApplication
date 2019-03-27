@@ -17,7 +17,7 @@ public class ArrayObject3D extends Object3D {
         for (int i = 0; i < rowNumber; i++) {
             for(int j =0; j< columnNumber; j++) {
                 Matrix.setIdentityM(objectArray[j+i*columnNumber], 0);
-                Matrix.translateM(objectArray[j+i*columnNumber], 0, (float) ((0.3f + ((i+2)*(j+2) % 3 / 10.0)) * (j+1)), (float)(Math.sin((i+2)*(j+1))*2.5f), (i+1)*0.3f+(float)(((i+1)%4)/16.0));
+                Matrix.translateM(objectArray[j+i*columnNumber], 0, (float) ((0.3f + ((i+2)*(j+2) % 3 / 10.0)) * (j+1)), (float)(Math.sin((i+2)*(j+1))*3.5f), (i+1)*0.3f+(float)(((i+1)%4)/16.0));
             }
         }
 
@@ -46,14 +46,14 @@ public class ArrayObject3D extends Object3D {
             GLES.selectProgram(shaderSelectNumber);
         for (int i = 0; i < objectArray.length; i++) {
             GLES.updateMatrix2(objectArray[i]);
-            draw();
+            draw(i);
         }
 
         time += incrementValue;
-        time %= 250;
+        //time %= 250;
     }
 
-    public void draw() {
+    public void draw(int id) {
         //頂点点列
 
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, model.vboNumber);
@@ -65,6 +65,7 @@ public class ArrayObject3D extends Object3D {
             //shadingを使わない時に使う単色の設定 (r, g, b,a)
             //GLES20.glUniform4f(GLES.objectColorHandle, r, g, b, a);
             GLES20.glUniform1i(GLES.timeHandle, time);
+            GLES20.glUniform1i(GLES.numberHandle, id);
 
         //
         model.indexBuffer.position(0);

@@ -442,7 +442,7 @@ public class IkebukuroStageConstructions extends StageConstructions {
                 3, 1, 16,
                 -5, -3.2f, -20,  //E
                 -18, -2, 20,  //5
-                -27, 7f, 32,
+                -17.5f, 7f, 32,
                 19,-4.65f,19,  //H
                 -18,7,0,
                 30,9,40,  //J
